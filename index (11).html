@@ -1,0 +1,3308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Mishpuchah — Artisan Bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f0;
+    --warm-white: #fffdf9;
+    --rose: #c4896f;
+    --rose-light: #e8c4b4;
+    --rose-dark: #9e5d44;
+    --gold: #c9a96e;
+    --gold-light: #e8d5b0;
+    --charcoal: #2a2118;
+    --charcoal-mid: #4a3a2e;
+    --charcoal-light: #7a6a5e;
+    --ribbon-bg: #2a2118;
+    --shadow: 0 20px 60px rgba(42,33,24,0.12);
+    --shadow-strong: 0 30px 80px rgba(42,33,24,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(250,246,240,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,169,110,0.2);
+    padding: 0 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    transition: all 0.3s ease;
+  }
+  nav.scrolled {
+    height: 60px;
+    box-shadow: 0 4px 30px rgba(42,33,24,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    line-height: 1.1;
+  }
+  .nav-logo span { color: var(--rose); font-style: italic; }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--charcoal-mid);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--rose);
+    transform: scaleX(0); transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--rose); }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: var(--charcoal);
+    color: var(--cream) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    transition: background 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--rose-dark) !important; color: var(--cream) !important; }
+
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none;
+  }
+  .nav-hamburger span {
+    display: block; width: 24px; height: 1.5px;
+    background: var(--charcoal); transition: all 0.3s;
+  }
+
+  /* Mobile nav */
+  .nav-mobile {
+    display: none; position: fixed; top: 72px; left: 0; right: 0;
+    background: var(--warm-white); z-index: 999;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--gold-light);
+    flex-direction: column; gap: 1.2rem;
+  }
+  .nav-mobile.open { display: flex; }
+  .nav-mobile a {
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--charcoal-mid); text-decoration: none; cursor: pointer;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+  }
+  .nav-mobile a:hover { color: var(--rose); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--cream) 0%, #f5ece0 50%, #ede0d0 100%);
+  }
+
+  .hero-decorations {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-circle-1 {
+    position: absolute; top: -8%; right: -5%;
+    width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,137,111,0.12) 0%, transparent 70%);
+  }
+  .hero-circle-2 {
+    position: absolute; bottom: 10%; left: -8%;
+    width: 380px; height: 380px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%);
+  }
+  .hero-line-1 {
+    position: absolute; top: 20%; right: 15%;
+    width: 1px; height: 200px;
+    background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.3), transparent);
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 3rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 4rem;
+  }
+
+  .hero-text { animation: fadeUp 1s ease both; }
+  .hero-eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); font-weight: 400;
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--rose);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.08;
+    color: var(--charcoal);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--rose);
+    font-weight: 300;
+  }
+
+  .hero-mission {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--charcoal-light);
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 0.85rem 2rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-primary:hover { background: var(--rose-dark); transform: translateY(-1px); }
+  .btn-primary svg { width: 14px; height: 14px; }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: transparent;
+    color: var(--charcoal);
+    padding: 0.85rem 2rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid rgba(42,33,24,0.25);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-secondary:hover { border-color: var(--rose); color: var(--rose); }
+
+  .hero-visual {
+    animation: fadeUp 1s 0.2s ease both;
+    position: relative;
+  }
+  .hero-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-strong);
+    position: relative;
+  }
+  .hero-card-accent {
+    position: absolute; top: -12px; right: -12px;
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--rose-light);
+    z-index: -1;
+  }
+  .hero-card-accent2 {
+    position: absolute; bottom: -16px; left: -16px;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gold-light);
+    z-index: -1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--rose);
+    color: white;
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 1.5rem;
+  }
+  .stat {
+    text-align: center;
+    padding: 1.2rem;
+    background: var(--cream);
+    border-radius: 3px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem; font-weight: 300;
+    color: var(--charcoal); line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--charcoal-light);
+  }
+
+  .hero-cake-preview {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--charcoal-mid);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+  .hero-cake-sub {
+    font-size: 0.78rem;
+    color: var(--charcoal-light);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== RIBBON SECTION ===== */
+  .ribbon-section {
+    background: var(--ribbon-bg);
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ribbon-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 2rem;
+  }
+  .ribbon-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  .ribbon-subtitle {
+    color: rgba(250,246,240,0.5);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Ribbon Controls */
+  .ribbon-controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .ribbon-arrow {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(250,246,240,0.08);
+    border: 1px solid rgba(250,246,240,0.2);
+    color: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .ribbon-arrow:hover {
+    background: var(--rose);
+    border-color: var(--rose);
+    transform: scale(1.05);
+  }
+  .ribbon-arrow svg { width: 18px; height: 18px; }
+
+  .ribbon-play-toggle {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--rose);
+    border: none;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .ribbon-play-toggle:hover { background: var(--rose-dark); transform: scale(1.05); }
+  .ribbon-play-toggle svg { width: 16px; height: 16px; }
+
+  .ribbon-speed-label {
+    font-size: 0.72rem;
+    color: rgba(250,246,240,0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Ribbon Track */
+  .ribbon-track-wrapper {
+    position: relative;
+    overflow: hidden;
+    /* Edge fade */
+  }
+  .ribbon-track-wrapper::before,
+  .ribbon-track-wrapper::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 120px; z-index: 10;
+    pointer-events: none;
+  }
+  .ribbon-track-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, var(--ribbon-bg), transparent);
+  }
+  .ribbon-track-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, var(--ribbon-bg), transparent);
+  }
+
+  .ribbon-track {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1rem 1.5rem;
+    cursor: grab;
+    user-select: none;
+    will-change: transform;
+  }
+  .ribbon-track:active { cursor: grabbing; }
+  .ribbon-track.paused { /* auto-scroll paused via JS */ }
+
+  .cake-card {
+    flex-shrink: 0;
+    width: 200px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .cake-card:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(196,137,111,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .cake-thumb {
+    height: 160px;
+    background: linear-gradient(135deg, rgba(196,137,111,0.15) 0%, rgba(201,169,110,0.08) 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .cake-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.3s ease;
+  }
+  .cake-card:hover .cake-thumb img { transform: scale(1.06); }
+
+  .cake-thumb-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(42,33,24,0.5));
+  }
+
+  .cake-card-body { padding: 1rem; }
+  .cake-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+  .cake-desc-short {
+    font-size: 0.7rem;
+    color: rgba(250,246,240,0.45);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .cake-view-btn {
+    display: flex; align-items: center; gap: 0.4rem;
+    margin-top: 0.75rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cake-card:hover .cake-view-btn { opacity: 1; }
+
+  /* ===== CAKE MODAL ===== */
+  .cake-modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(20,14,8,0.85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 1.5rem;
+  }
+  .cake-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .cake-modal {
+    background: var(--warm-white);
+    border-radius: 6px;
+    max-width: 680px; width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .cake-modal-overlay.open .cake-modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .cake-modal-hero {
+    position: relative;
+    width: 100%;
+    background: #f0e4d8;
+  }
+  .cake-modal-emoji {
+    display: block;
+    width: 100%;
+    line-height: 0;
+  }
+  .cake-modal-emoji img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 420px;
+    object-fit: contain;
+    background: #f0e4d8;
+  }
+  .cake-modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(42,33,24,0.5);
+    border: none; cursor: pointer; color: white;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; z-index: 10;
+  }
+  .cake-modal-close:hover { background: rgba(42,33,24,0.4); }
+  .cake-modal-close svg { width: 16px; height: 16px; }
+
+  /* Modal nav arrows */
+  .cake-modal-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(250,246,240,0.9);
+    border: none; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .cake-modal-nav:hover { background: var(--rose); color: white; transform: translateY(-50%) scale(1.08); }
+  .cake-modal-nav svg { width: 16px; height: 16px; }
+  .cake-modal-prev { left: 1rem; }
+  .cake-modal-next { right: 1rem; }
+
+  .cake-modal-body { padding: 2rem 2.5rem 2.5rem; }
+  .cake-modal-tag {
+    display: inline-block;
+    background: var(--rose-light);
+    color: var(--rose-dark);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+  .cake-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+  .cake-modal-desc {
+    color: var(--charcoal-light);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .cake-modal-details {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 1.75rem;
+    padding: 1.25rem;
+    background: var(--cream);
+    border-radius: 4px;
+  }
+  .cake-detail { display: flex; flex-direction: column; gap: 0.2rem; }
+  .cake-detail-label {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--charcoal-light);
+  }
+  .cake-detail-value {
+    font-size: 0.9rem; color: var(--charcoal); font-weight: 400;
+  }
+  .cake-modal-cta {
+    display: flex; gap: 1rem;
+  }
+
+  /* ===== ABOUT STRIP ===== */
+  .about-strip {
+    padding: 6rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .about-text .section-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.2rem;
+  }
+  .about-text .section-eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: var(--rose);
+  }
+  .about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300; line-height: 1.15;
+    color: var(--charcoal); margin-bottom: 1.25rem;
+  }
+  .about-body {
+    color: var(--charcoal-light);
+    font-size: 0.97rem;
+    line-height: 1.8; font-weight: 300;
+    margin-bottom: 1.75rem;
+  }
+  .about-pillars {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .about-pillar {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--warm-white);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+  }
+  .about-pillar-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .about-pillar-title {
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--charcoal); margin-bottom: 0.2rem;
+  }
+  .about-pillar-text { font-size: 0.8rem; color: var(--charcoal-light); line-height: 1.5; }
+
+  .about-visual {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;
+    gap: 1rem;
+  }
+  .about-img-card {
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .about-img-card.tall { grid-row: span 2; }
+  .about-img-placeholder {
+    width: 100%; height: 100%;
+    min-height: 140px;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+  .about-img-card.tall .about-img-placeholder { min-height: 300px; }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    text-align: center; padding: 5rem 2rem 3rem;
+  }
+  .section-eyebrow-center {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  }
+  .section-eyebrow-center::before, .section-eyebrow-center::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--rose);
+  }
+  .section-title-center {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; color: var(--charcoal);
+    margin-bottom: 0.75rem; line-height: 1.15;
+  }
+  .section-sub {
+    color: var(--charcoal-light);
+    font-size: 0.9rem; max-width: 520px; margin: 0 auto;
+    line-height: 1.7; font-weight: 300;
+  }
+
+  /* ===== GALLERY PAGE ===== */
+  .gallery-filter {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem;
+    padding: 0 2rem 3rem;
+  }
+  .filter-btn {
+    padding: 0.45rem 1.2rem;
+    background: transparent;
+    border: 1px solid rgba(42,33,24,0.18);
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--charcoal-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: var(--cream);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    padding: 0 3rem 5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .gallery-item {
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    transition: all 0.3s ease;
+  }
+  .gallery-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .gallery-item-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.5rem;
+  }
+  .gallery-emoji { display: none; }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(42,33,24,0.75) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end;
+    padding: 1.25rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; color: white; font-weight: 300;
+  }
+
+  /* ===== ORDER PAGE ===== */
+  .order-page { padding-top: 72px; background: var(--cream); }
+  .order-hero {
+    background: var(--charcoal);
+    padding: 4rem 3rem;
+    text-align: center;
+  }
+  .order-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300; color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  .order-hero-sub { color: rgba(250,246,240,0.6); font-size: 0.9rem; font-weight: 300; }
+
+  .order-container {
+    max-width: 800px; margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .order-notice {
+    background: rgba(196,137,111,0.12);
+    border-left: 3px solid var(--rose);
+    padding: 1rem 1.5rem;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 2.5rem;
+    font-size: 0.87rem;
+    color: var(--charcoal-mid);
+    line-height: 1.6;
+  }
+  .order-notice strong { color: var(--rose-dark); }
+
+  .order-form {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .form-section { margin-bottom: 2rem; }
+  .form-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; color: var(--charcoal);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(42,33,24,0.08);
+    font-weight: 400;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--charcoal-mid); font-weight: 400;
+  }
+  .form-input, .form-select, .form-textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(42,33,24,0.15);
+    border-radius: 3px;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--charcoal);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(196,137,111,0.12);
+  }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a3a2e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+
+  .cake-picker-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .cake-pick-btn {
+    padding: 0.6rem 0.5rem;
+    border: 1px solid rgba(42,33,24,0.12);
+    border-radius: 3px;
+    background: var(--cream);
+    cursor: pointer; text-align: center;
+    transition: all 0.2s; font-size: 0.75rem;
+    color: var(--charcoal-mid);
+    line-height: 1.3;
+  }
+  .cake-pick-btn span { display: block; font-size: 1.3rem; margin-bottom: 0.2rem; }
+  .cake-pick-btn:hover { border-color: var(--rose); color: var(--rose); background: rgba(196,137,111,0.06); }
+  .cake-pick-btn.selected { border-color: var(--rose); background: rgba(196,137,111,0.1); color: var(--rose-dark); font-weight: 500; }
+
+  .checkbox-group { display: flex; flex-direction: column; gap: 0.6rem; }
+  .checkbox-item { display: flex; align-items: center; gap: 0.65rem; cursor: pointer; }
+  .checkbox-item input { width: 16px; height: 16px; accent-color: var(--rose); cursor: pointer; }
+  .checkbox-item label { font-size: 0.87rem; color: var(--charcoal-mid); cursor: pointer; }
+
+  .form-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--charcoal);
+    color: var(--cream);
+    border: none; border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--rose-dark); }
+
+  /* ===== REVIEWS ===== */
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0 3rem 5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .review-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(42,33,24,0.06);
+    position: relative;
+  }
+  .review-quote {
+    position: absolute; top: 1.25rem; right: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--rose-light);
+    line-height: 1;
+    font-weight: 300;
+  }
+  .review-stars { color: var(--gold); margin-bottom: 1rem; font-size: 0.9rem; }
+  .review-text {
+    font-size: 0.92rem; color: var(--charcoal-mid);
+    line-height: 1.7; font-weight: 300;
+    margin-bottom: 1.25rem;
+    font-style: italic;
+  }
+  .review-author { display: flex; align-items: center; gap: 0.75rem; }
+  .review-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .review-name { font-size: 0.85rem; font-weight: 500; color: var(--charcoal); }
+  .review-date { font-size: 0.73rem; color: var(--charcoal-light); }
+
+  /* Leave a review */
+  .review-form-wrap {
+    max-width: 600px; margin: 0 auto;
+    padding: 0 2rem 5rem;
+  }
+  .review-form {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow);
+  }
+  .star-select { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .star-btn {
+    font-size: 1.4rem; cursor: pointer; background: none; border: none;
+    color: #d0c4b0;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .star-btn.active, .star-btn:hover { color: var(--gold); transform: scale(1.1); }
+
+  /* ===== CONTACT ===== */
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; max-width: 1000px; margin: 0 auto;
+    padding: 0 3rem 6rem;
+    align-items: start;
+  }
+  .contact-info-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; color: var(--charcoal);
+    margin-bottom: 1rem;
+  }
+  .contact-info-body {
+    color: var(--charcoal-light); font-size: 0.9rem; line-height: 1.7;
+    font-weight: 300; margin-bottom: 2rem;
+  }
+  .contact-details { display: flex; flex-direction: column; gap: 1.25rem; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--warm-white);
+    border-radius: 4px;
+  }
+  .contact-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--rose-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .contact-item-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--charcoal-light); margin-bottom: 0.15rem;
+  }
+  .contact-item-value { font-size: 0.9rem; color: var(--charcoal); }
+
+  .contact-form-box {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--charcoal);
+    padding: 4rem 3rem 2.5rem;
+    color: rgba(250,246,240,0.6);
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300; color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  .footer-brand-name span { color: var(--rose); font-style: italic; }
+  .footer-brand-text { font-size: 0.85rem; line-height: 1.7; font-weight: 300; max-width: 280px; }
+  .footer-col-title {
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--cream); margin-bottom: 1.25rem; font-weight: 400;
+  }
+  .footer-links { display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer-links a {
+    font-size: 0.85rem; color: rgba(250,246,240,0.55);
+    text-decoration: none; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--rose-light); }
+  .footer-bottom {
+    border-top: 1px solid rgba(250,246,240,0.08);
+    padding-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+    font-size: 0.78rem;
+  }
+  .footer-heart { color: var(--rose); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.4; }
+  }
+
+  /* ===== SUCCESS MSG ===== */
+  .success-toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 3000;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 1rem 1.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-strong);
+    display: flex; align-items: center; gap: 0.75rem;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .success-toast.show { transform: translateY(0); opacity: 1; }
+  .success-toast-icon { color: #6ec97a; font-size: 1.1rem; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero-content { grid-template-columns: 1fr; gap: 2.5rem; padding: 2rem 1.5rem; }
+    .hero-visual { display: none; }
+    .about-strip { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2.5rem; }
+    .about-visual { display: none; }
+    .gallery-grid { padding: 0 1.5rem 4rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .order-container { padding: 3rem 1.5rem 5rem; }
+    .order-form { padding: 1.75rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .cake-picker-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { padding: 0 1.5rem 4rem; }
+    .contact-grid { grid-template-columns: 1fr; padding: 0 1.5rem 5rem; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .ribbon-controls { gap: 0.5rem; }
+    .cake-modal-body { padding: 1.5rem 1.5rem 2rem; }
+    .cake-modal-title { font-size: 1.7rem; }
+    .cake-modal-details { grid-template-columns: 1fr; }
+    .cake-modal-cta { flex-direction: column; }
+    .hero-title { font-size: 2.5rem; }
+  }
+
+  /* ============================================================
+     IndexM ADDITIONS — language, accounts, cart, promo, etc.
+     (built on the same design tokens so the look is identical)
+     ============================================================ */
+
+  /* ----- Language toggle + account + cart in nav ----- */
+  .nav-utils { display: flex; align-items: center; gap: 1rem; }
+  .lang-toggle {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: transparent; border: 1px solid rgba(42,33,24,0.22);
+    border-radius: 2px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.06em; color: var(--charcoal-mid);
+    padding: 0.4rem 0.6rem; transition: all 0.2s;
+  }
+  .lang-toggle:hover { border-color: var(--rose); color: var(--rose); }
+  .lang-toggle .lang-on { color: var(--rose); font-weight: 600; }
+  .nav-cart {
+    position: relative; background: none; border: none; cursor: pointer;
+    color: var(--charcoal-mid); display: flex; align-items: center; padding: 0.2rem;
+  }
+  .nav-cart:hover { color: var(--rose); }
+  .nav-cart svg { width: 22px; height: 22px; }
+  .cart-count {
+    position: absolute; top: -6px; right: -8px;
+    background: var(--rose); color: #fff; font-size: 0.6rem; font-weight: 600;
+    min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .cart-count.empty { display: none; }
+
+  /* ----- PROMO BANNER (Attention Special Promotion) ----- */
+  .promo-section { background: var(--cream); padding: 3.5rem 1.5rem; display: flex; justify-content: center; }
+  .promo-card {
+    position: relative; width: 100%; max-width: 780px;
+    border-radius: 4px; padding: 3px;
+    background: linear-gradient(135deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.85) 30%,
+                rgba(232,213,176,1) 50%, rgba(201,169,110,0.85) 70%, rgba(201,169,110,0) 100%);
+    background-size: 300% 300%;
+    animation: promoShimmer 4s ease infinite, promoFadeUp 0.9s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes promoShimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  @keyframes promoFadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  .promo-inner {
+    background: linear-gradient(160deg, rgba(42,33,24,0.97) 0%, rgba(28,20,12,0.99) 100%);
+    border-radius: 2px; padding: 2.4rem 2.8rem 2.6rem; position: relative; overflow: hidden;
+  }
+  .promo-inner::after {
+    content:''; position:absolute; top:-40px; left:50%; transform:translateX(-50%);
+    width:340px; height:140px; background: radial-gradient(ellipse, rgba(201,169,110,0.16) 0%, transparent 70%);
+    pointer-events:none; animation: promoGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes promoGlow { 0%,100%{opacity:.7} 50%{opacity:1} }
+  .promo-rule { display:flex; align-items:center; gap:12px; margin-bottom: 1.2rem; }
+  .promo-rule.bottom { margin-bottom:0; margin-top: 1.3rem; }
+  .promo-rule span { flex:1; height:1px; background: linear-gradient(90deg, transparent, rgba(201,169,110,0.7), transparent); }
+  .promo-diamond { width:7px; height:7px; background: var(--gold); transform: rotate(45deg); flex-shrink:0;
+                   box-shadow: 0 0 8px rgba(201,169,110,0.6); animation: promoDiamond 2.5s ease-in-out infinite; }
+  @keyframes promoDiamond { 0%,100%{box-shadow:0 0 6px rgba(201,169,110,.5)} 50%{box-shadow:0 0 14px rgba(201,169,110,.95)} }
+  .promo-title {
+    font-family: 'Cormorant Garamond', serif; font-weight: 500;
+    font-size: clamp(1.5rem, 3.2vw, 2rem); color: var(--gold-light);
+    letter-spacing: 0.03em; text-align: center; line-height: 1.3; margin-bottom: 0.9rem;
+  }
+  .promo-body { font-family: 'DM Sans', sans-serif; font-weight: 300; text-align: center;
+    font-size: clamp(0.92rem, 1.9vw, 1.05rem); color: rgba(255,245,220,0.92); line-height: 1.8; }
+  .promo-line { display:block; }
+  .promo-sparkles { position:absolute; inset:0; pointer-events:none; overflow:hidden; border-radius:2px; }
+  .promo-spark { position:absolute; width:3px; height:3px; background: var(--gold); border-radius:50%; opacity:0;
+    animation: promoFloat var(--dur) ease-in-out var(--delay) infinite; }
+  @keyframes promoFloat {
+    0%{transform:translate(0,0) scale(0);opacity:0}
+    20%{opacity:.85;transform:translate(var(--tx), calc(var(--ty)*.3)) scale(1)}
+    80%{opacity:.4}
+    100%{transform:translate(var(--tx),var(--ty)) scale(.2);opacity:0} }
+
+  /* ----- Cake images replacing decorative emojis ----- */
+  .stat-img { width: 2.4rem; height: 2.4rem; border-radius: 50%; object-fit: cover; display:block; margin:0 auto 0.3rem; box-shadow: 0 4px 12px rgba(42,33,24,0.18); }
+  .about-pillar-img { width: 2.4rem; height: 2.4rem; border-radius: 50%; object-fit: cover; flex-shrink:0; box-shadow: 0 4px 12px rgba(42,33,24,0.15); }
+  .about-img-card img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 140px; }
+  .about-img-card.tall img { min-height: 300px; }
+
+  /* ----- Cake modal: variation gallery + add to cart ----- */
+  .cake-modal-hero { display: flex; align-items: center; justify-content: center; }
+  .cake-modal-emoji img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: contain; background: #f0e4d8; }
+  .modal-var-dots { display: flex; justify-content: center; gap: 6px; padding: 0.6rem 0 0; }
+  .modal-var-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(42,33,24,0.2); transition: all 0.2s; cursor: pointer; }
+  .modal-var-dot.active { background: var(--rose); transform: scale(1.25); }
+  .cake-modal-price { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--rose-dark); font-weight: 500; }
+  .cake-modal-ingredients { font-size: 0.85rem; color: var(--charcoal-light); line-height: 1.6; margin-bottom: 1.25rem; }
+  .cake-modal-ingredients b { color: var(--charcoal-mid); }
+  .added-flash { display:inline-block; margin-left: 0.6rem; color: #2e9e5b; font-size: 0.8rem; font-weight: 600; opacity: 0; transition: opacity 0.2s; }
+  .added-flash.show { opacity: 1; }
+  .var-counter { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--charcoal-light); text-align:center; margin-top: 0.25rem; }
+
+  /* ----- CHECKOUT / CART (order page) ----- */
+  .checkout-grid { display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 1.5rem; align-items: start; }
+  .checkout-card { background: var(--warm-white); border-radius: 6px; padding: 1.75rem; box-shadow: var(--shadow); }
+  .checkout-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.4rem; color: var(--charcoal); margin-bottom: 0.35rem; }
+  .cart-head, .cart-row {
+    display: grid; grid-template-columns: 2.2fr 0.9fr 1fr 1fr 28px; gap: 0.6rem; align-items: center;
+  }
+  .cart-head { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal-light); padding: 0.5rem 0; border-bottom: 1px solid rgba(42,33,24,0.1); }
+  .cart-row { padding: 0.7rem 0; border-bottom: 1px solid rgba(42,33,24,0.06); font-size: 0.88rem; }
+  .cart-row .ci-name { font-weight: 500; color: var(--charcoal); }
+  .cart-row input { width: 56px; padding: 0.35rem 0.4rem; border: 1px solid rgba(42,33,24,0.18); border-radius: 4px; background: var(--cream); font-family: inherit; }
+  .cart-remove { background: none; border: none; color: var(--charcoal-light); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+  .cart-remove:hover { color: var(--rose-dark); }
+  .cart-empty { padding: 1.5rem 0; color: var(--charcoal-light); font-size: 0.9rem; text-align: center; }
+  .cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(42,33,24,0.12); }
+  .cart-total-row .lbl { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal-light); }
+  .cart-total-row .amt { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--charcoal); }
+
+  .pay-methods { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.4rem; }
+  .pay-card { border: 1.5px solid rgba(42,33,24,0.14); border-radius: 6px; padding: 0.75rem 1rem; cursor: pointer;
+    background: var(--cream); transition: all 0.18s; display: flex; align-items: center; justify-content: space-between; }
+  .pay-card:hover { border-color: var(--rose-light); }
+  .pay-card.selected { border-color: var(--rose); background: rgba(196,137,111,0.08); box-shadow: 0 4px 14px rgba(196,137,111,0.18); }
+  .pay-card-main { display: flex; align-items: center; gap: 0.65rem; }
+  .pay-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--rose-light); background: #fff; flex-shrink: 0; }
+  .pay-card.selected .pay-dot { border-color: var(--rose); background: var(--rose); }
+  .pay-title { font-weight: 500; color: var(--charcoal); font-size: 0.9rem; }
+  .pay-tag { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--charcoal-light); }
+  .pay-instructions { margin-top: 0.75rem; font-size: 0.82rem; color: var(--charcoal-mid); line-height: 1.6;
+    background: rgba(201,169,110,0.1); border-radius: 4px; padding: 0.75rem 1rem; display: none; }
+  .pay-instructions.show { display: block; }
+  .btn-clear { width: 100%; padding: 0.85rem; background: transparent; color: var(--rose-dark);
+    border: 1px solid rgba(158,93,68,0.35); border-radius: 3px; cursor: pointer; margin-top: 0.7rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
+  .btn-clear:hover { background: rgba(158,93,68,0.08); }
+  .checkout-msg { margin-top: 0.9rem; font-size: 0.85rem; line-height: 1.6; }
+  .checkout-msg.error { color: #c0392b; }
+  .checkout-msg.success { color: #2e7d4f; white-space: pre-line; background: rgba(46,125,79,0.08); padding: 0.9rem 1rem; border-radius: 4px; }
+  .login-gate { text-align: center; padding: 1.25rem; background: rgba(196,137,111,0.08); border: 1px dashed var(--rose-light);
+    border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.9rem; color: var(--charcoal-mid); }
+  .login-gate a { color: var(--rose-dark); cursor: pointer; font-weight: 500; text-decoration: underline; }
+  @media (max-width: 820px) { .checkout-grid { grid-template-columns: 1fr; } }
+
+  /* ----- ACCOUNT / AUTH / ADMIN ----- */
+  .account-wrap { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  .auth-box { max-width: 460px; margin: 0 auto; background: var(--warm-white); border-radius: 6px; padding: 2.25rem 2.25rem 2rem; box-shadow: var(--shadow); }
+  .auth-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .auth-tab { flex: 1; padding: 0.6rem; background: var(--cream); border: 1px solid rgba(42,33,24,0.12); border-radius: 3px;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--charcoal-mid); transition: all 0.2s; }
+  .auth-tab.active { background: var(--charcoal); color: var(--cream); border-color: var(--charcoal); }
+  .auth-pane { display: none; } .auth-pane.active { display: block; }
+  .auth-link { text-align: center; margin-top: 1rem; font-size: 0.82rem; color: var(--charcoal-light); }
+  .auth-link a { color: var(--rose-dark); cursor: pointer; text-decoration: underline; }
+  .auth-msg { font-size: 0.84rem; margin-top: 0.75rem; line-height: 1.5; }
+  .auth-msg.error { color: #c0392b; } .auth-msg.success { color: #2e7d4f; }
+
+  .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem; }
+  .dash-hello { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--charcoal); }
+  .dash-hello span { color: var(--rose); font-style: italic; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 820px){ .dash-grid { grid-template-columns: 1fr; } }
+  .dash-card { background: var(--warm-white); border-radius: 6px; padding: 1.6rem; box-shadow: 0 4px 20px rgba(42,33,24,0.06); }
+  .dash-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.35rem; color: var(--charcoal); margin-bottom: 1rem; }
+  .order-hist-item { border: 1px solid rgba(42,33,24,0.1); border-radius: 6px; padding: 1rem 1.1rem; margin-bottom: 0.85rem; }
+  .ohi-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.4rem; }
+  .ohi-id { font-weight: 600; color: var(--charcoal); font-size: 0.9rem; }
+  .ohi-status { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.18rem 0.55rem; border-radius: 999px; background: var(--rose-light); color: var(--rose-dark); }
+  .ohi-meta { font-size: 0.8rem; color: var(--charcoal-light); margin: 0.3rem 0; }
+  .ohi-items { font-size: 0.85rem; color: var(--charcoal-mid); line-height: 1.5; }
+  .admin-section { margin-top: 2.5rem; }
+  .admin-review { border: 1px solid rgba(42,33,24,0.1); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 1rem 1.1rem; margin-bottom: 0.85rem; background: var(--warm-white); }
+  .admin-review .ar-text { font-style: italic; color: var(--charcoal-mid); margin: 0.4rem 0 0.8rem; line-height: 1.6; }
+  .admin-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .btn-approve, .btn-reject { padding: 0.45rem 1rem; border: none; border-radius: 3px; cursor: pointer; font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'DM Sans', sans-serif; }
+  .btn-approve { background: #2e7d4f; color: #fff; } .btn-approve:hover { background: #246b42; }
+  .btn-reject { background: transparent; color: #c0392b; border: 1px solid rgba(192,57,43,0.4); } .btn-reject:hover { background: rgba(192,57,43,0.08); }
+  .admin-user-row { display: grid; grid-template-columns: 1.4fr 1fr auto; gap: 0.6rem; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(42,33,24,0.07); font-size: 0.84rem; }
+  .admin-user-row .small-btn { font-size: 0.68rem; padding: 0.3rem 0.6rem; border: 1px solid rgba(42,33,24,0.2); background: var(--cream); border-radius: 3px; cursor: pointer; color: var(--charcoal-mid); }
+  .admin-user-row .small-btn:hover { border-color: var(--rose); color: var(--rose); }
+  .muted-note { font-size: 0.82rem; color: var(--charcoal-light); line-height: 1.6; }
+
+  @media (max-width: 900px){ .nav-utils { gap: 0.6rem; } }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="showPage('home')">Sweet <span>Mishpuchah</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" data-i18n="nav.home">Home</a></li>
+    <li><a onclick="showPage('gallery')" id="nav-gallery" data-i18n="nav.gallery">Gallery</a></li>
+    <li><a onclick="showPage('order')" id="nav-order" data-i18n="nav.order">Order</a></li>
+    <li><a onclick="showPage('reviews')" id="nav-reviews" data-i18n="nav.reviews">Reviews</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact" data-i18n="nav.contact">Contact</a></li>
+    <li><a onclick="showPage('account')" id="nav-account" data-i18n="nav.account">Account</a></li>
+    <li><a onclick="showPage('order')" class="nav-cta" data-i18n="nav.orderNow">Order Now</a></li>
+  </ul>
+  <div class="nav-utils">
+    <button class="nav-cart" onclick="showPage('order')" aria-label="Cart" title="Cart">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.2a1 1 0 0 0 1-.8L19.5 7H6"/><circle cx="9" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></svg>
+      <span class="cart-count empty" id="cartCount">0</span>
+    </button>
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Language / Язык">
+      <span class="lang-on" id="langEn">EN</span><span>·</span><span id="langRu">RU</span>
+    </button>
+    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="nav-mobile" id="mobileNav">
+  <a onclick="showPage('home');closeMobileNav()" data-i18n="nav.home">Home</a>
+  <a onclick="showPage('gallery');closeMobileNav()" data-i18n="nav.gallery">Gallery</a>
+  <a onclick="showPage('order');closeMobileNav()" data-i18n="nav.order">Order</a>
+  <a onclick="showPage('reviews');closeMobileNav()" data-i18n="nav.reviews">Reviews</a>
+  <a onclick="showPage('contact');closeMobileNav()" data-i18n="nav.contact">Contact</a>
+  <a onclick="showPage('account');closeMobileNav()" data-i18n="nav.account">Account</a>
+</div>
+
+<!-- ====== HOME PAGE ====== -->
+<div class="page active" id="page-home">
+
+  <!-- INTERACTIVE RIBBON MENU (now the first thing on the page) -->
+  <section class="ribbon-section" style="padding-top:7rem;">
+    <div class="ribbon-header">
+      <div class="ribbon-title" data-i18n="ribbon.title">Our Menu</div>
+      <div class="ribbon-subtitle" data-i18n="ribbon.subtitle">Click any cake to explore · Use arrows or drag to browse</div>
+    </div>
+
+    <div class="ribbon-controls">
+      <button class="ribbon-arrow" id="ribbonLeft" aria-label="Scroll left">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <span class="ribbon-speed-label" data-i18n="ribbon.auto">Auto</span>
+      <button class="ribbon-play-toggle" id="ribbonPlayBtn" aria-label="Play/pause">
+        <svg id="ribbonPlayIcon" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <span class="ribbon-speed-label" data-i18n="ribbon.scroll">Scroll</span>
+      <button class="ribbon-arrow" id="ribbonRight" aria-label="Scroll right">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="ribbon-track-wrapper">
+      <div class="ribbon-track" id="ribbonTrack"></div>
+    </div>
+  </section>
+
+  <!-- ATTENTION SPECIAL PROMOTION (under the ribbon, before the artisan bakery section) -->
+  <section class="promo-section">
+    <div class="promo-card">
+      <div class="promo-inner">
+        <div class="promo-sparkles" id="promoSparkles"></div>
+        <div class="promo-rule"><span></span><div class="promo-diamond"></div><span></span></div>
+        <div class="promo-title" data-i18n="promo.title">Attention Special Promotion:</div>
+        <div class="promo-body">
+          <span class="promo-line" data-i18n="promo.line1">In celebration of our grand opening we are offering a special promotion!</span>
+          <span class="promo-line" data-i18n="promo.line2">We are providing a free gift of our delicious pastries with every order!</span>
+        </div>
+        <div class="promo-rule bottom"><span></span><div class="promo-diamond"></div><span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO (Family-Owned Artisan Bakery) -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-decorations">
+      <div class="hero-circle-1"></div>
+      <div class="hero-circle-2"></div>
+      <div class="hero-line-1"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-eyebrow" data-i18n="hero.eyebrow">Family-Owned Artisan Bakery</div>
+        <h1 class="hero-title" data-i18n-html="hero.title">
+          Baked with <em>love,</em><br>shared with <em>family.</em>
+        </h1>
+        <p class="hero-mission" data-i18n="hero.mission">We are a small family-owned, authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that will satisfy your every craving.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showPage('order')">
+            <span data-i18n="hero.placeOrder">Place an Order</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </button>
+          <button class="btn-secondary" onclick="showPage('gallery')" data-i18n="hero.browseMenu">Browse Menu</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-accent"></div>
+          <div class="hero-card-accent2"></div>
+          <div class="hero-badge" data-i18n="hero.badge">✨ Freshly Baked to Order</div>
+          <div class="hero-cake-preview" data-i18n="hero.cakePreview">Napoleon Cake</div>
+          <div class="hero-cake-sub" data-i18n="hero.cakeSub">Flaky layers with vanilla cream</div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num">28+</div>
+              <div class="stat-label" data-i18n="stat.varieties">Cake Varieties</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">100%</div>
+              <div class="stat-label" data-i18n="stat.homemade">Homemade</div>
+            </div>
+            <div class="stat">
+              <img class="stat-img" src="https://i.imgur.com/Q62En7b.jpeg" alt="Honey cake">
+              <div class="stat-label" data-i18n="stat.familyRecipe">Family Recipe</div>
+            </div>
+            <div class="stat">
+              <img class="stat-img" src="https://i.imgur.com/paaH7xO.jpeg" alt="Custom cake">
+              <div class="stat-label" data-i18n="stat.customOrders">Custom Orders</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <section>
+    <div class="about-strip">
+      <div class="about-text">
+        <div class="section-eyebrow" data-i18n="about.eyebrow">Our Story</div>
+        <h2 class="about-title" data-i18n="about.title">A family tradition, baked into every layer.</h2>
+        <p class="about-body" data-i18n="about.body">Mishpuchah — the Yiddish word for family — is at the heart of everything we do. Every cake that leaves our kitchen carries generations of love, authentic recipes, and the warmth of a home kitchen. We don't cut corners, we don't use shortcuts, and we never compromise on quality.</p>
+        <div class="about-pillars">
+          <div class="about-pillar">
+            <img class="about-pillar-img" src="https://i.imgur.com/Q62En7b.jpeg" alt="Homemade cake">
+            <div>
+              <div class="about-pillar-title" data-i18n="about.pillar1Title">Homemade & Authentic</div>
+              <div class="about-pillar-text" data-i18n="about.pillar1Text">Every recipe is made from scratch using traditional family methods, passed down through generations.</div>
+            </div>
+          </div>
+          <div class="about-pillar">
+            <img class="about-pillar-img" src="https://i.imgur.com/yfmbrjQ.jpeg" alt="Quality ingredients cake">
+            <div>
+              <div class="about-pillar-title" data-i18n="about.pillar2Title">Quality Ingredients</div>
+              <div class="about-pillar-text" data-i18n="about.pillar2Text">We source only the finest ingredients — real cream, fresh fruit, pure vanilla — nothing artificial.</div>
+            </div>
+          </div>
+          <div class="about-pillar">
+            <img class="about-pillar-img" src="https://i.imgur.com/crPL5IR.jpeg" alt="Beautifully crafted cake">
+            <div>
+              <div class="about-pillar-title" data-i18n="about.pillar3Title">Beautifully Crafted</div>
+              <div class="about-pillar-text" data-i18n="about.pillar3Text">Every cake is an edible work of art, designed to look as incredible as it tastes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-img-card tall">
+          <img src="https://i.imgur.com/gKg1nF7.jpeg" alt="Napoleon cake">
+        </div>
+        <div class="about-img-card">
+          <img src="https://i.imgur.com/7XExzfo.jpeg" alt="Pavlova cake">
+        </div>
+        <div class="about-img-card">
+          <img src="https://i.imgur.com/JztsnwL.jpeg" alt="Strawberry Charlotte cake">
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /home -->
+
+<!-- ====== GALLERY PAGE ====== -->
+<div class="page" id="page-gallery">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center" data-i18n="gallery.eyebrow">Our Creations</div>
+      <h2 class="section-title-center" data-i18n="gallery.title">The Full Collection</h2>
+      <p class="section-sub" data-i18n="gallery.sub">Every cake is baked fresh to order. Browse our full selection below — click any item for details.</p>
+    </div>
+    <div class="gallery-filter" id="galleryFilter"></div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<!-- ====== ORDER PAGE (Checkout cart) ====== -->
+<div class="page" id="page-order">
+  <div class="order-page">
+    <div class="order-hero">
+      <div class="order-hero-title" data-i18n="order.title">Place Your Order</div>
+      <div class="order-hero-sub" data-i18n="order.sub">Review your cart, choose a date, and check out</div>
+    </div>
+    <div class="order-container" style="max-width:1040px;">
+      <div class="order-notice">
+        <strong data-i18n="order.noticeStrong">⏰ Please Note:</strong>
+        <span data-i18n="order.noticeText">Cakes are baked fresh to order. The earliest available pickup date reflects our bake time and daily order limits.</span>
+      </div>
+
+      <div class="checkout-grid">
+
+        <!-- CART -->
+        <div class="checkout-card">
+          <h3 data-i18n="order.yourCart">Your Cart</h3>
+          <p class="muted-note" data-i18n="order.cartHint">Add cakes from the menu or gallery, then adjust quantities here.</p>
+          <div class="cart-head">
+            <div data-i18n="order.colItem">Item</div>
+            <div data-i18n="order.colPrice">Price</div>
+            <div data-i18n="order.colQty">Qty</div>
+            <div data-i18n="order.colSubtotal">Subtotal</div>
+            <div></div>
+          </div>
+          <div id="cartRows"></div>
+          <div class="cart-total-row">
+            <div class="lbl" data-i18n="order.total">Total</div>
+            <div class="amt" id="cartTotal">$0.00</div>
+          </div>
+          <button class="btn-clear" id="clearCartBtn" onclick="clearCart()" data-i18n="order.clearCart">Clear Cart</button>
+          <div id="clearStatus" class="checkout-msg"></div>
+          <div style="margin-top:1rem;text-align:center;">
+            <button class="btn-secondary" onclick="showPage('gallery')" data-i18n="order.browseMore">+ Browse more cakes</button>
+          </div>
+        </div>
+
+        <!-- ORDER DETAILS -->
+        <div class="checkout-card">
+          <h3 data-i18n="order.detailsTitle">Order Details</h3>
+
+          <div class="login-gate" id="orderLoginGate">
+            <span data-i18n="order.loginGate">Please sign in to place an order.</span><br>
+            <a onclick="showPage('account')" data-i18n="order.loginLink">Sign in or create an account →</a>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.orderDate">Order / Pickup Date *</label>
+            <input type="date" class="form-input" id="orderDate">
+            <div id="dateStatus" class="checkout-msg"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.fullName">Full Name *</label>
+            <input type="text" class="form-input" id="custName" data-i18n-ph="order.fullNamePh" placeholder="First and last name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.phone">Phone *</label>
+            <input type="tel" class="form-input" id="custPhone" data-i18n-ph="order.phonePh" placeholder="For order updates">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.email">Email *</label>
+            <input type="email" class="form-input" id="custEmail" data-i18n-ph="order.emailPh" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.writing">Cake Writing</label>
+            <textarea class="form-textarea" id="custWriting" style="min-height:70px" data-i18n-ph="order.writingPh" placeholder="Example: “Happy Birthday, Anna!”"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="order.payment">Payment Method *</label>
+            <div class="pay-methods" id="payMethods">
+              <div class="pay-card" data-method="zelle">
+                <div class="pay-card-main"><div class="pay-dot"></div><div class="pay-title">Zelle</div></div>
+                <div class="pay-tag" data-i18n="order.recommended">Recommended</div>
+              </div>
+              <div class="pay-card" data-method="venmo">
+                <div class="pay-card-main"><div class="pay-dot"></div><div class="pay-title">Venmo</div></div>
+                <div class="pay-tag" data-i18n="order.popular">Popular</div>
+              </div>
+              <div class="pay-card" data-method="cashapp">
+                <div class="pay-card-main"><div class="pay-dot"></div><div class="pay-title">Cash App</div></div>
+                <div class="pay-tag" data-i18n="order.accepted">Accepted</div>
+              </div>
+              <div class="pay-card" data-method="cash">
+                <div class="pay-card-main"><div class="pay-dot"></div><div class="pay-title" data-i18n="order.cash">Cash</div></div>
+                <div class="pay-tag" data-i18n="order.inPerson">In person</div>
+              </div>
+            </div>
+            <div class="pay-instructions" id="payInstructions"></div>
+          </div>
+
+          <button class="form-submit" id="placeOrderBtn" onclick="placeOrder()" data-i18n="order.placeOrder">Place Order →</button>
+          <div id="orderStatus" class="checkout-msg"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== REVIEWS PAGE ====== -->
+<div class="page" id="page-reviews">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center" data-i18n="reviews.eyebrow">Customer Love</div>
+      <h2 class="section-title-center" data-i18n="reviews.title">What Our Family Says</h2>
+      <p class="section-sub" data-i18n="reviews.sub">Every review is a story of a moment made sweeter. We're grateful for every one.</p>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+    <div class="review-form-wrap">
+      <div class="section-header" style="padding-top: 1rem; padding-bottom: 1.5rem;">
+        <div class="section-eyebrow-center" data-i18n="reviews.shareEyebrow">Share Your Experience</div>
+        <h3 class="section-title-center" style="font-size:1.8rem;" data-i18n="reviews.leaveTitle">Leave a Review</h3>
+      </div>
+      <div class="review-form">
+        <div class="form-group">
+          <label class="form-label" data-i18n="reviews.yourName">Your Name</label>
+          <input type="text" class="form-input" data-i18n-ph="reviews.yourNamePh" placeholder="Your name" id="reviewName">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="reviews.rating">Rating</label>
+          <div class="star-select" id="starSelect">
+            <button class="star-btn" data-star="1">★</button>
+            <button class="star-btn" data-star="2">★</button>
+            <button class="star-btn" data-star="3">★</button>
+            <button class="star-btn" data-star="4">★</button>
+            <button class="star-btn" data-star="5">★</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="reviews.yourReview">Your Review</label>
+          <textarea class="form-textarea" data-i18n-ph="reviews.yourReviewPh" placeholder="Tell us about your experience…" id="reviewText"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitReview()" data-i18n="reviews.submit">Submit Review →</button>
+        <div id="reviewStatus" class="checkout-msg"></div>
+        <p class="muted-note" style="margin-top:0.75rem;" data-i18n="reviews.moderationNote">Reviews are read by our family before they appear, so it may take a little while to show up.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== CONTACT PAGE ====== -->
+<div class="page" id="page-contact">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center" data-i18n="contact.eyebrow">Get In Touch</div>
+      <h2 class="section-title-center" data-i18n="contact.title">We'd Love to Hear from You</h2>
+      <p class="section-sub" data-i18n="contact.sub">Have a question? Curious about a custom order? We're just a message away.</p>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info-title" data-i18n="contact.reachTitle">Reach Out Anytime</div>
+        <p class="contact-info-body" data-i18n="contact.reachBody">We're a small family business and we personally respond to every message. Whether you have a question about our menu, want to request a custom cake, or just want to say hi — don't hesitate to reach out.</p>
+        <div class="contact-details">
+          <div class="contact-item">
+            <div class="contact-icon">📱</div>
+            <div>
+              <div class="contact-item-label" data-i18n="contact.phoneLabel">Phone / Text</div>
+              <div class="contact-item-value" data-i18n="contact.phoneValue">Available on request</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-item-label" data-i18n="contact.emailLabel">Email</div>
+              <div class="contact-item-value">thesweetmishpuchah@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div>
+              <div class="contact-item-label" data-i18n="contact.responseLabel">Response Time</div>
+              <div class="contact-item-value" data-i18n="contact.responseValue">Within 24 hours</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📦</div>
+            <div>
+              <div class="contact-item-label" data-i18n="contact.bakeLabel">Bake Time</div>
+              <div class="contact-item-value" data-i18n="contact.bakeValue">3–5 days recommended</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-box">
+        <div class="form-group">
+          <label class="form-label" data-i18n="contact.formName">Your Name</label>
+          <input type="text" class="form-input" id="contactName" data-i18n-ph="contact.formNamePh" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="contact.formEmail">Email</label>
+          <input type="email" class="form-input" id="contactEmail" data-i18n-ph="contact.formEmailPh" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="contact.formSubject">Subject</label>
+          <select class="form-select" id="contactSubject">
+            <option data-i18n="contact.subj1">General Inquiry</option>
+            <option data-i18n="contact.subj2">Custom Order Question</option>
+            <option data-i18n="contact.subj3">Order Status</option>
+            <option data-i18n="contact.subj4">Feedback</option>
+            <option data-i18n="contact.subj5">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="contact.formMessage">Message</label>
+          <textarea class="form-textarea" id="contactMessage" style="min-height:130px" data-i18n-ph="contact.formMessagePh" placeholder="Write your message here…"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitContact()" data-i18n="contact.send">Send Message →</button>
+        <div id="contactStatus" class="checkout-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ACCOUNT PAGE ====== -->
+<div class="page" id="page-account">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center" data-i18n="account.eyebrow">Your Account</div>
+      <h2 class="section-title-center" data-i18n="account.title">Sign In or Create an Account</h2>
+      <p class="section-sub" data-i18n="account.sub">Order from your account, keep an order history, and check out faster.</p>
+    </div>
+    <div class="account-wrap">
+
+      <!-- AUTH (logged out) -->
+      <div id="authView">
+        <div class="auth-box">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')" data-i18n="account.signIn">Sign In</button>
+            <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')" data-i18n="account.createAccount">Create Account</button>
+          </div>
+
+          <!-- LOGIN -->
+          <div class="auth-pane active" id="paneLogin">
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.email">Email</label>
+              <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.password">Password</label>
+              <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="form-submit" onclick="doLogin()" data-i18n="account.signIn">Sign In</button>
+            <div class="auth-link"><a onclick="switchAuthTab('forgot')" data-i18n="account.forgot">Forgot your password?</a></div>
+            <div id="loginMsg" class="auth-msg"></div>
+          </div>
+
+          <!-- SIGNUP -->
+          <div class="auth-pane" id="paneSignup">
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.name">Full Name</label>
+              <input type="text" class="form-input" id="signupName" placeholder="First and last name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.email">Email</label>
+              <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.phone">Phone</label>
+              <input type="tel" class="form-input" id="signupPhone" placeholder="(555) 000-0000">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.password">Password</label>
+              <input type="password" class="form-input" id="signupPassword" data-i18n-ph="account.passwordPh" placeholder="At least 6 characters">
+            </div>
+            <button class="form-submit" onclick="doSignup()" data-i18n="account.createAccount">Create Account</button>
+            <div id="signupMsg" class="auth-msg"></div>
+          </div>
+
+          <!-- FORGOT -->
+          <div class="auth-pane" id="paneForgot">
+            <p class="muted-note" data-i18n="account.forgotIntro">Enter your email and we'll send a reset code. If you're stuck, our family can reset it for you — just contact us.</p>
+            <div class="form-group" style="margin-top:0.75rem;">
+              <label class="form-label" data-i18n="account.email">Email</label>
+              <input type="email" class="form-input" id="forgotEmail" placeholder="you@example.com">
+            </div>
+            <button class="form-submit" onclick="doRequestReset()" data-i18n="account.sendCode">Send Reset Code</button>
+            <div id="forgotResetFields" style="display:none;">
+              <div class="form-group" style="margin-top:1rem;">
+                <label class="form-label" data-i18n="account.resetCode">Reset Code</label>
+                <input type="text" class="form-input" id="resetCode" data-i18n-ph="account.resetCodePh" placeholder="6-digit code">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="account.newPassword">New Password</label>
+                <input type="password" class="form-input" id="resetNewPassword" data-i18n-ph="account.passwordPh" placeholder="At least 6 characters">
+              </div>
+              <button class="form-submit" onclick="doResetPassword()" data-i18n="account.setPassword">Set New Password</button>
+            </div>
+            <div class="auth-link"><a onclick="switchAuthTab('login')" data-i18n="account.backToSignIn">← Back to sign in</a></div>
+            <div id="forgotMsg" class="auth-msg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD (logged in) -->
+      <div id="dashView" style="display:none;">
+        <div class="dash-head">
+          <div class="dash-hello"><span data-i18n="account.hello">Hello</span>, <span id="dashName"></span></div>
+          <button class="btn-secondary" onclick="doLogout()" data-i18n="account.signOut">Sign Out</button>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <h3 data-i18n="account.profile">Profile</h3>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.name">Full Name</label>
+              <input type="text" class="form-input" id="profName">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.phone">Phone</label>
+              <input type="tel" class="form-input" id="profPhone">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="account.email">Email</label>
+              <input type="email" class="form-input" id="profEmail" disabled>
+            </div>
+            <button class="form-submit" onclick="saveProfile()" data-i18n="account.saveProfile">Save Profile</button>
+            <div id="profileMsg" class="auth-msg"></div>
+          </div>
+          <div class="dash-card">
+            <h3 data-i18n="account.orderHistory">Order History</h3>
+            <div id="orderHistory"><p class="muted-note" data-i18n="account.loadingOrders">Loading your orders…</p></div>
+          </div>
+        </div>
+
+        <!-- ADMIN PANEL (admin account only) -->
+        <div id="adminPanel" class="admin-section" style="display:none;">
+          <div class="section-header" style="padding:2rem 0 1.5rem;">
+            <div class="section-eyebrow-center" data-i18n="admin.eyebrow">Admin</div>
+            <h2 class="section-title-center" style="font-size:2rem;" data-i18n="admin.title">Bakery Admin Panel</h2>
+          </div>
+          <div class="dash-grid">
+            <div class="dash-card">
+              <h3 data-i18n="admin.pendingReviews">Pending Reviews</h3>
+              <div id="pendingReviews"><p class="muted-note" data-i18n="admin.loading">Loading…</p></div>
+            </div>
+            <div class="dash-card">
+              <h3 data-i18n="admin.helpCustomers">Help a Customer</h3>
+              <p class="muted-note" data-i18n="admin.helpIntro">Reset a password or sign someone out if they are locked out of their account.</p>
+              <div class="form-group" style="margin-top:0.75rem;">
+                <label class="form-label" data-i18n="admin.customerEmail">Customer Email</label>
+                <input type="email" class="form-input" id="adminCustEmail" placeholder="customer@example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="admin.newPassword">New Temporary Password</label>
+                <input type="text" class="form-input" id="adminNewPass" data-i18n-ph="account.passwordPh" placeholder="At least 6 characters">
+              </div>
+              <div class="admin-actions">
+                <button class="btn-approve" onclick="adminSetPass()" data-i18n="admin.setPassword">Set Password</button>
+                <button class="btn-reject" onclick="adminForceLogoutUser()" data-i18n="admin.forceLogout">Force Sign-Out</button>
+              </div>
+              <div id="adminHelpMsg" class="auth-msg"></div>
+              <div class="admin-section">
+                <h3 style="font-size:1.1rem;" data-i18n="admin.allUsers">All Accounts</h3>
+                <div id="adminUsers"><p class="muted-note" data-i18n="admin.loading">Loading…</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">Sweet <span>Mishpuchah</span></div>
+      <p class="footer-brand-text" data-i18n="footer.brandText">A small family-owned authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that satisfy your every craving.</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.navigate">Navigate</div>
+      <div class="footer-links">
+        <a onclick="showPage('home')" data-i18n="nav.home">Home</a>
+        <a onclick="showPage('gallery')" data-i18n="nav.gallery">Gallery</a>
+        <a onclick="showPage('order')" data-i18n="nav.orderNow">Order Now</a>
+        <a onclick="showPage('reviews')" data-i18n="nav.reviews">Reviews</a>
+        <a onclick="showPage('contact')" data-i18n="nav.contact">Contact</a>
+        <a onclick="showPage('account')" data-i18n="nav.account">Account</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.ourCakes">Our Cakes</div>
+      <div class="footer-links">
+        <a onclick="showPage('gallery')">Napoleon</a>
+        <a onclick="showPage('gallery')">Medovik</a>
+        <a onclick="showPage('gallery')">Pavlova</a>
+        <a onclick="showPage('gallery')">Cheesecake</a>
+        <a onclick="showPage('gallery')">Milky Girl</a>
+        <a onclick="showPage('gallery')" data-i18n="footer.viewAll">View All →</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div><span data-i18n="footer.copyright">© 2026 Sweet Mishpuchah. Made with</span> <span class="footer-heart">♥</span> <span data-i18n="footer.byFamily">by family, for family.</span></div>
+    <div data-i18n="footer.freshNote">All orders are baked fresh to order.</div>
+  </div>
+</footer>
+
+<!-- ====== CAKE MODAL ====== -->
+<div class="cake-modal-overlay" id="cakeModalOverlay" onclick="closeCakeModal(event)">
+  <div class="cake-modal" id="cakeModal">
+    <div class="cake-modal-hero" id="cakeModalHero">
+      <button class="cake-modal-nav cake-modal-prev" onclick="modalNav(-1)" aria-label="Previous design">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="cake-modal-emoji" id="cakeModalEmoji"></div>
+      <button class="cake-modal-close" onclick="closeCakeModalDirect()" aria-label="Close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <button class="cake-modal-nav cake-modal-next" onclick="modalNav(1)" aria-label="Next design">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="modal-var-dots" id="cakeModalVarDots"></div>
+    <div class="var-counter" id="cakeModalVarCounter"></div>
+    <div class="cake-modal-body">
+      <div class="cake-modal-tag" id="cakeModalTag">Classic</div>
+      <h2 class="cake-modal-title" id="cakeModalTitle">Cake Name</h2>
+      <p class="cake-modal-desc" id="cakeModalDesc">Description here.</p>
+      <p class="cake-modal-ingredients"><b data-i18n="modal.ingredients">Ingredients:</b> <span id="cakeModalIngredients"></span></p>
+      <div class="cake-modal-details">
+        <div class="cake-detail" id="cakeModalSizeRow">
+          <div class="cake-detail-label" data-i18n="modal.size">Size</div>
+          <div class="cake-detail-value" id="cakeModalSize">—</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label" data-i18n="modal.serves">Serves</div>
+          <div class="cake-detail-value" id="cakeModalServes">—</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label" data-i18n="modal.category">Category</div>
+          <div class="cake-detail-value" id="cakeModalCat">—</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label" data-i18n="modal.bakeTime">Bake Time</div>
+          <div class="cake-detail-value" data-i18n="modal.bakeTimeValue">3–5 days</div>
+        </div>
+      </div>
+      <div style="margin-bottom:1.25rem;">
+        <span class="cake-detail-label" data-i18n="modal.price">Price</span>
+        <div class="cake-modal-price" id="cakeModalPrice">$0</div>
+      </div>
+      <div class="cake-modal-cta">
+        <button class="btn-primary" id="addToCartBtn" onclick="addToCartFromModal()" data-i18n="modal.addToCart">Add to Cart</button>
+        <button class="btn-secondary" onclick="closeCakeModalDirect()" data-i18n="modal.keepBrowsing">Keep Browsing</button>
+        <span class="added-flash" id="addedFlash" data-i18n="modal.added">Added ✓</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SUCCESS TOAST ====== -->
+<div class="success-toast" id="successToast">
+  <span class="success-toast-icon">✓</span>
+  <span id="successToastMsg">Your request has been submitted!</span>
+</div>
+
+<script>
+/* ===== __01_data.js ===== */
+/* ============================================================================
+   SWEET MISHPUCHAH — CAKE DATA  (single source of truth for ribbon + gallery)
+   ----------------------------------------------------------------------------
+   HOW TO EDIT:
+   • Each cake = one object below. Change text/price/images freely.
+   • "variations" = the extra design photos for that cake. The arrows in the
+     popup flip through them. A plain {img:"..."} reuses the cake's text;
+     give a variation its own name/desc/price to make it a distinct option.
+   • Russian fields end in "Ru". Fill them in to keep the site fully bilingual
+     (if a Ru field is blank, the English text is shown instead).
+   ============================================================================ */
+
+/* Re-used variation blurbs (so we don't repeat them for each photo) */
+const V = {
+  meNapoleon: {
+    name:"Middle Eastern Napoleon", nameRu:"Ближневосточный Наполеон", id:"middle-eastern-napoleon-cake",
+    desc:"The Middle Eastern Napoleon cake is crafted from delicate, flaky pastry layers baked until crisp and golden, then generously filled with a silky charlotte custard cream infused with subtle regional sweetness. A touch of honey or fragrant syrup adds a gentle floral note, echoing the flavors found in traditional Middle Eastern desserts — familiar yet beautifully enriched with regional character.",
+    descRu:"«Ближневосточный Наполеон» — тонкие хрустящие золотистые слои слоёного теста, щедро наполненные шелковистым заварным кремом «шарлотт» с лёгкими восточными нотами. Намёк на мёд или ароматный сироп придаёт нежный цветочный оттенок, как в традиционных восточных десертах. Знакомый вкус, обогащённый региональным характером.",
+    ingr:"flour, eggs, sugar, butter, cognac, and milk.", ingrRu:"мука, яйца, сахар, масло, коньяк и молоко."
+  },
+  forestGlade: {
+    name:"Forest Glade (Sponge Roulette)", nameRu:"Лесная поляна (бисквитный рулет)", id:"forest-glade-sponge-roulette",
+    desc:"The Forest Glade is crafted from a soft, airy sponge sheet rolled around a luscious blend of whipped cream and mascarpone, studded with bursts of fresh berries for a bright, tangy lift. A smooth chocolate cream coating envelops the roll. When sliced, each piece reveals a graceful spiral of sponge, cream, and fruit — vibrant and refined with a hint of woodland charm.",
+    descRu:"«Лесная поляна» — мягкий воздушный бисквит, свёрнутый вокруг нежной начинки из взбитых сливок и маскарпоне со свежими ягодами для яркой кислинки. Снаружи — гладкое шоколадно‑сливочное покрытие. В разрезе — изящная спираль из бисквита, крема и фруктов, яркая и утончённая.",
+    ingr:"eggs, sugar, flour, vanilla, whipped cream, mascarpone, berries.", ingrRu:"яйца, сахар, мука, ваниль, взбитые сливки, маскарпоне, ягоды."
+  }
+};
+
+const CAKES = [
+  {
+    id:0, name:"Medovik", nameRu:"Медовик", category:"Classic", tag:"Best Seller", tagRu:"Хит продаж",
+    img:"https://i.imgur.com/Q62En7b.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Medovik cake is a layered honey cake made from thin, tender biscuit-like layers infused with honey, stacked with a tangy-sweet cream filling (traditionally sour cream or a mix of sour cream and whipped cream). Over time, the layers soften, creating a melt-in-the-mouth texture.",
+    descRu:"«Медовик» — слоёный медовый торт из тонких нежных коржей, пропитанных мёдом, с кисло‑сладким сливочным кремом (традиционно из сметаны или смеси сметаны и взбитых сливок). Со временем коржи пропитываются и буквально тают во рту.",
+    ingr:"flour, eggs, sugar, butter, honey, baking soda, sour cream or sour cream with whipped cream, condensed milk or butter.",
+    ingrRu:"мука, яйца, сахар, сливочное масло, мёд, сода, сметана или сметана со взбитыми сливками, сгущёнка или масло.",
+    variations:[
+      { img:"https://i.imgur.com/Q62En7b.jpeg" },
+      { img:"https://i.imgur.com/jE6fRsM.png", name:"Chocolate Glazed Medovik", nameRu:"Медовик в шоколадной глазури", id:"chocolate-glazed-medovik",
+        desc:"The Chocolate Glazed Medovik is a layered honey cake of thin, tender honey-infused layers and a sour-cream filling, finished with a melt-in-the-mouth chocolate glaze.",
+        descRu:"«Медовик в шоколадной глазури» — слоёный медовый торт из тонких нежных коржей с мёдом и кремом на основе сметаны, покрытый тающей во рту шоколадной глазурью.",
+        ingr:"flour, eggs, sugar, butter, honey, baking soda, sour cream, and butter.", ingrRu:"мука, яйца, сахар, масло, мёд, сода, сметана и масло." },
+      { img:"https://i.imgur.com/Fw9OD9I.jpeg", name:"Brown Medovik", nameRu:"Тёмный Медовик", id:"brown-medovik",
+        desc:"A darker take on the classic Medovik — thin honey layers and a sour-cream filling baked to a deeper, richer caramel tone.",
+        descRu:"Более тёмная версия классического «Медовика» — тонкие медовые коржи и сметанный крем с насыщенным карамельным оттенком.",
+        ingr:"flour, eggs, sugar, butter, honey, baking soda, sour cream, and butter.", ingrRu:"мука, яйца, сахар, масло, мёд, сода, сметана и масло." }
+    ]
+  },
+  {
+    id:1, name:"Milky Girl", nameRu:"Молочная девочка", category:"Classic", tag:"Fan Favorite", tagRu:"Любимец публики",
+    img:"https://i.imgur.com/JQ2VrsG.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Milky Girl cake is built from whisper-thin layers made with condensed milk, each sheet carrying a gentle caramelized sweetness. These layers are joined by a smooth, cloud-like cream that keeps the structure light rather than heavy, harmonizing into a tender balance of dairy richness and airy delicacy.",
+    descRu:"«Молочная девочка» (Milky Girl) — торт из тончайших коржей на сгущённом молоке с лёгкой карамельной сладостью, соединённых нежным, как облако, кремом. Со временем вкусы гармонично сливаются в мягкое, воздушное послевкусие.",
+    ingr:"sweetened condensed milk, eggs, flour, baking powder, cream cheese, heavy cream, powdered sugar, vanilla, and raspberry jam.",
+    ingrRu:"сгущённое молоко, яйца, мука, разрыхлитель, сливочный сыр, жирные сливки, сахарная пудра, ваниль и малиновое варенье.",
+    variations:[
+      { img:"https://i.imgur.com/JQ2VrsG.jpeg" }, { img:"https://i.imgur.com/cI8qy21.jpeg" },
+      { img:"https://i.imgur.com/oGNwVpp.jpeg" }, { img:"https://i.imgur.com/uRe68BU.jpeg" }
+    ]
+  },
+  {
+    id:2, name:"Napoleon", nameRu:"Наполеон", category:"Classic", tag:"Signature", tagRu:"Фирменный",
+    img:"https://i.imgur.com/gKg1nF7.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Napoleon cake is crafted from multiple thin, flaky pastry layers baked until crisp and golden, then generously coated with smooth, velvety custard cream. As it rests, the pastry softens and absorbs the cream, creating a delicate balance between tender and crisp. Timeless, refined, and endlessly satisfying.",
+    descRu:"«Наполеон» — торт из множества тонких хрустящих коржей слоёного теста, щедро промазанных гладким бархатистым заварным кремом. Со временем коржи пропитываются кремом, создавая баланс хрустящего и нежного. Вне времени, утончённый и бесконечно любимый.",
+    ingr:"flour, eggs, sugar, butter and milk.", ingrRu:"мука, яйца, сахар, сливочное масло и молоко.",
+    variations:[
+      { img:"https://i.imgur.com/gKg1nF7.jpeg" }, { img:"https://i.imgur.com/90jCtfl.jpeg" },
+      { img:"https://i.imgur.com/qdVbQpv.jpeg", ...V.meNapoleon },
+      { img:"https://i.imgur.com/7jQqWnm.jpeg", ...V.meNapoleon },
+      { img:"https://i.imgur.com/FJPklKh.jpeg", ...V.meNapoleon }
+    ]
+  },
+  {
+    id:3, name:"Kievsky", nameRu:"Киевский", category:"Nut", tag:"Classic", tagRu:"Классика",
+    img:"https://i.imgur.com/yfmbrjQ.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Kievsky cake is a nutty meringue-based delight made with airy layers of hazelnut and cashew meringue, filled with rich buttercream and various glazes based on the flavor chosen, creating a crisp-yet-creamy texture that balances sweetness with a subtle nutty crunch.",
+    descRu:"«Киевский» торт — ореховое лакомство на основе меренги из воздушных коржей с фундуком и кешью, с насыщенным масляным кремом и различными глазурями на выбор. Хрустящая и одновременно кремовая текстура с тонкой ореховой ноткой.",
+    ingr:"egg whites, sugar, hazelnuts and cashews, flour, vanilla, butter, cocoa powder, brandy or rum.",
+    ingrRu:"яичные белки, сахар, фундук и кешью, мука, ваниль, масло, какао‑порошок, бренди или ром.",
+    variations:[
+      { img:"https://i.imgur.com/yfmbrjQ.jpeg" }, { img:"https://i.imgur.com/5V32uE1.jpeg" },
+      { img:"https://i.imgur.com/juvBCNo.jpeg" }, { img:"https://i.imgur.com/eTpEFlL.png" }
+    ]
+  },
+  {
+    id:4, name:"Sweet Fantasy", nameRu:"Сладкая фантазия", category:"Specialty", tag:"Popular", tagRu:"Популярный",
+    img:"https://i.imgur.com/FFYsxQ1.jpeg", price:"$80",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Sweet Fantasy cake is composed of crisp yet delicate sheets of baked meringue, each light as air and faintly sweet. Between the layers rests a smooth whipped or custard-based cream that softens the meringue just enough to create a gentle contrast of textures — elegant and comforting.",
+    descRu:"«Сладкая фантазия» — торт из хрустящих, но нежных коржей запечённой меренги, лёгких как воздух. Между слоями — гладкий взбитый или заварной крем, который слегка размягчает меренгу, создавая нежный контраст текстур. Изысканный и уютный десерт.",
+    ingr:"egg whites, sugar, cornstarch, vinegar or lemon juice, whipped cream, vanilla.",
+    ingrRu:"яичные белки, сахар, кукурузный крахмал, уксус или лимонный сок, взбитые сливки, ваниль.",
+    variations:[
+      { img:"https://i.imgur.com/FFYsxQ1.jpeg" }, { img:"https://i.imgur.com/MXztmLI.jpeg" },
+      { img:"https://i.imgur.com/6CaBeDP.jpeg" }, { img:"https://i.imgur.com/Jy0hZUW.jpeg" }
+    ]
+  },
+  {
+    id:5, name:"Lemon", nameRu:"Лимонный торт", category:"Fruit", tag:"Refreshing", tagRu:"Освежающий",
+    img:"https://i.imgur.com/wSOuJb4.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Lemon cake is a bright, refreshing dessert built on soft, moist layers infused with the zest and juice of fresh lemons. A gentle citrus tang is balanced by a smooth, lightly sweet cream or glaze, yielding a tender crumb and a clean, invigorating finish.",
+    descRu:"«Лимонный» торт — яркий освежающий десерт из мягких влажных коржей с цедрой и соком свежих лимонов. Лёгкая цитрусовая кислинка уравновешена гладким, в меру сладким кремом или глазурью. Нежный мякиш и чистое, бодрящее послевкусие.",
+    ingr:"flour, sugar, butter, eggs, lemon zest, lemon juice, baking powder, milk, vanilla.",
+    ingrRu:"мука, сахар, масло, яйца, лимонная цедра, лимонный сок, разрыхлитель, молоко, ваниль.",
+    variations:[ { img:"https://i.imgur.com/wSOuJb4.jpeg" } ]
+  },
+  {
+    id:6, name:"Esterházy", nameRu:"Эстерхази", category:"Specialty", tag:"Elegant", tagRu:"Элегантный",
+    img:"https://i.imgur.com/aUcKPRw.jpg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Esterházy Torte is a refined Hungarian classic of multiple thin nut-based sponge layers, joined by a silky buttercream enriched with vanilla or cognac and crowned with its signature spider-web chocolate pattern. Nutty richness and smooth cream meld into a balanced, elegant texture.",
+    descRu:"«Эстерхази» — изысканная венгерская классика из множества тонких коржей орехового бисквита, соединённых шелковистым масляным кремом с ванилью или коньяком и увенчанных фирменным узором‑паутинкой из шоколада. Нежная и роскошная текстура.",
+    ingr:"egg whites, sugar, ground hazelnuts and almonds, flour, butter, egg yolks, milk, vanilla, kirsch or rum, apricot jam.",
+    ingrRu:"яичные белки, сахар, молотый фундук и миндаль, мука, масло, яичные желтки, молоко, ваниль, кирш или ром, абрикосовый джем.",
+    variations:[ { img:"https://i.imgur.com/aUcKPRw.jpg" }, { img:"https://i.imgur.com/5UIvL7h.png" } ]
+  },
+  {
+    id:7, name:"Bird's Milk", nameRu:"Птичье молоко", category:"Classic", tag:"Soviet Classic", tagRu:"Советская классика",
+    img:"https://i.imgur.com/02S6jom.jpg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Bird's Milk cake is a confection of airy elegance — tender sponge topped with a light, souffle-like filling of whipped egg whites and sweetened condensed milk, cloaked in a smooth chocolate glaze that adds a gentle snap with each bite.",
+    descRu:"«Птичье молоко» — торт воздушной элегантности: нежный бисквит с лёгкой суфле‑начинкой из взбитых белков и сгущённого молока, покрытый гладкой шоколадной глазурью, которая приятно похрустывает при каждом укусе.",
+    ingr:"eggs, sugar, flour, butter, milk, gelatin, sour cream, sweetened condensed milk, vanilla, chocolate, heavy cream.",
+    ingrRu:"яйца, сахар, мука, масло, молоко, желатин, сметана, сгущённое молоко, ваниль, шоколад, жирные сливки.",
+    variations:[
+      { img:"https://i.imgur.com/02S6jom.jpg" }, { img:"https://i.imgur.com/cMi7avs.png" },
+      { img:"https://i.imgur.com/IlbCyvE.jpeg" }, { img:"https://i.imgur.com/vqxHEX4.jpeg" }
+    ]
+  },
+  {
+    id:8, name:"Cheesecake", nameRu:"Чизкейк", category:"Cheesecake", tag:"Creamy", tagRu:"Кремовый",
+    img:"https://i.imgur.com/Bcb0k7J.jpeg", price:"$60",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Cheesecake is a classic indulgence on a crisp, buttery crust with a smooth, velvety filling of cream cheese, eggs, and sugar baked to a tender, custard-like texture. Balanced richness and a subtle tang, finished plain or with fruit and chocolate.",
+    descRu:"Чизкейк — классическое лакомство на хрустящей песочной основе с гладкой бархатистой начинкой из сливочного сыра, яиц и сахара, запечённой до нежной, почти кремовой текстуры. Насыщенный вкус с лёгкой кислинкой — просто так, с фруктами или шоколадом.",
+    ingr:"cream cheese, sugar, eggs, vanilla, salt.", ingrRu:"сливочный сыр, сахар, яйца, ваниль, соль.",
+    variations:[
+      { img:"https://i.imgur.com/Bcb0k7J.jpeg" },
+      { img:"https://i.imgur.com/8NlzG0M.jpeg", name:"Chocolate Cheesecake", nameRu:"Шоколадный чизкейк", id:"chocolate-cheesecake",
+        desc:"The Chocolate Cheesecake is a decadent fusion of rich cream cheese and smooth chocolate baked into a velvety, indulgent filling on a crisp cocoa or cookie-crumb base, finished with glossy ganache or a dusting of cocoa.",
+        descRu:"Шоколадный чизкейк — роскошное сочетание сливочного сыра и гладкого шоколада, запечённое в бархатистую начинку на хрустящей какао‑основе, с глянцевым ганашем или какао сверху.",
+        ingr:"cream cheese, sugar, eggs, cocoa powder, chocolate, matzoh meal, butter, vanilla, sour cherries.",
+        ingrRu:"сливочный сыр, сахар, яйца, какао‑порошок, шоколад, мацовая мука, масло, ваниль, вишня." },
+      { img:"https://i.imgur.com/nDKcLXH.png", name:"Sour Cherry Cheesecake", nameRu:"Чизкейк с вишней", id:"sour-cherry-cheesecake",
+        desc:"The Sour Cherry Cheesecake pairs a golden, crumbly crust with a silky cream-cheese core, crowned with a ruby sour-cherry compote whose tartness cuts through the creaminess for a bold, comforting balance of sweet and sour.",
+        descRu:"Чизкейк с вишней — золотистая рассыпчатая основа и шелковистая сырная серединка, увенчанная рубиновым вишнёвым компоте, кислинка которого оттеняет кремовость. Смелый и уютный баланс сладкого и кислого.",
+        ingr:"cream cheese, sugar, eggs, butter, vanilla, sour cherries.", ingrRu:"сливочный сыр, сахар, яйца, масло, ваниль, вишня." }
+    ]
+  },
+  {
+    id:9, name:"Fluffy", nameRu:"Нежность", category:"Sponge", tag:"Airy", tagRu:"Воздушный",
+    img:"https://i.imgur.com/NliZ81m.jpeg", price:"$100",
+    size:"15″ x 11″.", sizeRu:"15″ x 11″.", serves:"about 20 people.", servesRu:"около 20 человек.",
+    desc:"The Fluffy cake, whose name means 'Tenderness,' is a light and graceful creation of airy sponge layers paired with a delicate cream — often enriched with condensed milk or whipped cream — for a gentle sweetness and a soft, melt-away texture.",
+    descRu:"«Нежность» (Fluffy) — лёгкий и изящный торт из воздушных бисквитных коржей с нежным кремом, часто со сгущённым молоком или взбитыми сливками. Мягкая сладость и тающая текстура, оправдывающие название.",
+    ingr:"eggs, sugar, flour, sour cream, butter, baking soda or baking powder, vanilla.",
+    ingrRu:"яйца, сахар, мука, сметана, масло, сода или разрыхлитель, ваниль.",
+    variations:[ { img:"https://i.imgur.com/NliZ81m.jpeg" } ]
+  },
+  {
+    id:10, name:"Pavlova", nameRu:"Павлова", category:"Meringue", tag:"Stunning", tagRu:"Потрясающий",
+    img:"https://i.imgur.com/7XExzfo.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Pavlova is a showpiece of airy elegance — a crisp meringue shell with a marshmallow-soft center, crowned with billows of whipped cream and a vibrant array of fresh fruit. A harmonious balance of brittle, tender, and juicy textures.",
+    descRu:"«Павлова» — эффектный торт воздушной элегантности: хрустящая снаружи и нежная, как зефир, внутри меренга, увенчанная облаками взбитых сливок и яркими свежими фруктами. Гармоничный баланс хрупкого, нежного и сочного.",
+    ingr:"egg whites, sugar, cornstarch, vinegar or lemon juice, vanilla, heavy cream.",
+    ingrRu:"яичные белки, сахар, кукурузный крахмал, уксус или лимонный сок, ваниль, жирные сливки.",
+    variations:[ { img:"https://i.imgur.com/7XExzfo.jpeg" } ]
+  },
+  {
+    id:11, name:"Gingerbread", nameRu:"Пряник", category:"Spiced", tag:"Warm & Cozy", tagRu:"Тёплый и уютный",
+    img:"https://i.imgur.com/yRmHQde.jpeg", price:"$60",
+    size:"", sizeRu:"", serves:"15–20 people.", servesRu:"15–20 человек.",
+    desc:"The Gingerbread cake is a traditional Tula-style treat of dense, honey-based dough infused with warm spice and filled with jam that adds a gentle tartness. Pressed into ornate molds for a decorative imprint, with a firm yet tender bite and fragrant flavor.",
+    descRu:"«Пряник» — традиционное лакомство в стиле тульского пряника: плотное медовое тесто с тёплыми пряностями и начинкой из джема, придающего лёгкую кислинку. Печётся в узорных формах с декоративным оттиском; плотная, но нежная текстура и насыщенный аромат.",
+    ingr:"flour, honey, sugar, eggs, water, rye flour, spices, jam or condensed milk filling.",
+    ingrRu:"мука, мёд, сахар, яйца, вода, ржаная мука, пряности, начинка из джема или сгущёнки.",
+    variations:[ { img:"https://i.imgur.com/yRmHQde.jpeg" }, { img:"https://i.imgur.com/lhu9DBl.jpeg" } ]
+  },
+  {
+    id:12, name:"Royal Ruins", nameRu:"Графские развалины", category:"Specialty", tag:"Premium", tagRu:"Премиум",
+    img:"https://i.imgur.com/emjcPSn.jpeg", price:"$100",
+    size:"11″ x 9″.", sizeRu:"11″ x 9″.", serves:"15–20 people.", servesRu:"15–20 человек.",
+    desc:"The Royal Ruins cake is a playful yet indulgent dessert of crumbled sponge pieces layered with rich sour-cream or condensed-milk cream. Its intentionally 'ruined' look softens as the cream permeates the crumbs into a tender, melt-away texture.",
+    descRu:"«Графские развалины» — игривый и роскошный десерт из кусочков бисквита, переслоённых насыщенным кремом из сметаны или сгущёнки. Нарочито «разрушенный» вид смягчается, когда крем пропитывает кусочки до нежной, тающей текстуры.",
+    ingr:"eggs, sugar, flour, sour cream, butter, cocoa powder, vanilla.",
+    ingrRu:"яйца, сахар, мука, сметана, масло, какао‑порошок, ваниль.",
+    variations:[ { img:"https://i.imgur.com/emjcPSn.jpeg" }, { img:"https://i.imgur.com/bWYxv0A.jpeg" } ]
+  },
+  {
+    id:13, name:"King's Cake", nameRu:"Королевский торт", category:"Specialty", tag:"Regal", tagRu:"Королевский",
+    img:"https://i.imgur.com/paaH7xO.jpeg", price:"$100",
+    size:"11″ x 9″.", sizeRu:"11″ x 9″.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Kings cake is a sumptuous, celebratory dessert built from rich short-crust layers, often with meringue cream, traditionally adorned with fresh strawberries, kiwis, peach or apricot for a regal appearance. Tender crumb and smooth filling in harmony.",
+    descRu:"«Королевский» торт — роскошный праздничный десерт из насыщенных песочных коржей, часто с меренговым кремом, традиционно украшенный свежей клубникой, киви, персиком или абрикосом. Нежный мякиш и гладкая начинка в гармонии.",
+    ingr:"eggs, sugar, flour, butter, vanilla.", ingrRu:"яйца, сахар, мука, масло, ваниль.",
+    variations:[ { img:"https://i.imgur.com/paaH7xO.jpeg" } ]
+  },
+  {
+    id:14, name:"Apple Pie", nameRu:"Яблочный пирог", category:"Fruit", tag:"Autumn", tagRu:"Осенний",
+    img:"https://i.imgur.com/HGEFjNa.jpeg", price:"$40",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–12 people.", servesRu:"10–12 человек.",
+    desc:"The Apple Pie is a timeless classic — a buttery, flaky crust cradling tender apples spiced with cinnamon and nutmeg, baked until the fruit softens into a luscious, golden interior. A balanced sweetness and a nostalgic taste of home.",
+    descRu:"Яблочный пирог — вечная классика: рассыпчатое масляное тесто с нежными яблоками, приправленными корицей и мускатным орехом, запечёнными до сочной золотистой серединки. Сбалансированная сладость и ностальгический вкус дома.",
+    ingr:"apples, sugar, brown sugar, flour, butter, cinnamon, nutmeg, salt, lemon juice, eggs, pie crust.",
+    ingrRu:"яблоки, сахар, коричневый сахар, мука, масло, корица, мускатный орех, соль, лимонный сок, яйца, тесто для пирога.",
+    variations:[
+      { img:"https://i.imgur.com/HGEFjNa.jpeg" }, { img:"https://i.imgur.com/v38bo9q.jpeg" }, { img:"https://i.imgur.com/j3fnjdo.jpeg" }
+    ]
+  },
+  {
+    id:15, name:"Pear Pie", nameRu:"Грушевый пирог", category:"Fruit", tag:"Delicate", tagRu:"Нежный",
+    img:"https://i.imgur.com/uJoT5DF.jpeg", price:"$50",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–12 people.", servesRu:"10–12 человек.",
+    desc:"The Pear Pie pairs a buttery, flaky crust with ripe pears baked to tender perfection over an almond-butter filling, lifted with vanilla or warm spice. A mellow, juicy bite with subtle elegance.",
+    descRu:"Грушевый пирог — рассыпчатое масляное тесто со спелыми грушами, запечёнными до мягкости, на начинке из миндального крема с ноткой ванили или пряностей. Сочный, мягкий вкус с лёгкой утончённостью.",
+    ingr:"pears, sugar, brown sugar, wheat flour, almond flour, butter, cinnamon, nutmeg, salt, lemon juice, eggs, pie crust.",
+    ingrRu:"груши, сахар, коричневый сахар, пшеничная мука, миндальная мука, масло, корица, мускатный орех, соль, лимонный сок, яйца, тесто для пирога.",
+    variations:[ { img:"https://i.imgur.com/uJoT5DF.jpeg" } ]
+  },
+  {
+    id:16, name:"Pineapple", nameRu:"Перевёрнутый ананасовый торт", category:"Fruit", tag:"Tropical", tagRu:"Тропический",
+    img:"https://i.imgur.com/XUOfb5M.jpeg", price:"$60",
+    size:"11″ x 9″.", sizeRu:"11″ x 9″.", serves:"15–20 people.", servesRu:"15–20 человек.",
+    desc:"The Pineapple Upside-Down cake bakes golden pineapple rings and bright cherries into a caramelized crown over a tender, buttery sponge that soaks up the juices. A lively balance of caramelized fruit and soft cake.",
+    descRu:"«Перевёрнутый ананасовый» торт — кольца золотистого ананаса и яркие вишни запекаются в карамелизованную «корону» над нежным масляным бисквитом, впитавшим сок. Живой баланс карамелизованных фруктов и мягкого коржа.",
+    ingr:"pineapple rings, maraschino cherries, brown sugar, butter, flour, sugar, eggs, milk, salt.",
+    ingrRu:"кольца ананаса, коктейльные вишни, коричневый сахар, масло, мука, сахар, яйца, молоко, соль.",
+    variations:[ { img:"https://i.imgur.com/XUOfb5M.jpeg" } ]
+  },
+  {
+    id:17, name:"Meringue Roll", nameRu:"Меренговый рулет", category:"Meringue", tag:"Sweet", tagRu:"Сладкий",
+    img:"https://i.imgur.com/f6rPzgP.jpeg", price:"$60",
+    size:"12 inches.", sizeRu:"12 дюймов.", serves:"10–12 people.", servesRu:"10–12 человек.",
+    desc:"The Meringue Roulette is a striking dessert of spiraled crisp meringue and velvety cream, often accented with fruit or chocolate. The meringue's delicate crunch gives way to a tender, melt-in-the-mouth interior.",
+    descRu:"«Меренговый рулет» — эффектный десерт из спиральных слоёв хрустящей меренги и бархатистого крема, часто с фруктами или шоколадом. Хрусткая меренга сменяется нежной, тающей серединкой.",
+    ingr:"egg whites, sugar, cornstarch, vinegar or lemon juice, vanilla, whipped cream.",
+    ingrRu:"яичные белки, сахар, кукурузный крахмал, уксус или лимонный сок, ваниль, взбитые сливки.",
+    variations:[
+      { img:"https://i.imgur.com/f6rPzgP.jpeg" }, { img:"https://i.imgur.com/bRVyXxY.jpeg" }, { img:"https://i.imgur.com/jx53Lkt.jpeg" }
+    ]
+  },
+  {
+    id:18, name:"Sponge Roll", nameRu:"Бисквитный рулет", category:"Sponge", tag:"Classic", tagRu:"Классика",
+    img:"https://i.imgur.com/uno3x1l.png", price:"$60",
+    size:"12 inches.", sizeRu:"12 дюймов.", serves:"10–12 people.", servesRu:"10–12 человек.",
+    desc:"The Sponge Roulette is a soft, airy sponge sheet rolled around a smooth cream filling flavored with vanilla or cocoa, sometimes accented with fruit preserves or chocolate. Each slice reveals a graceful spiral of cake and filling.",
+    descRu:"«Бисквитный рулет» — мягкий воздушный бисквит, свёрнутый вокруг гладкого крема с ванилью или какао, иногда с джемом или шоколадом. В разрезе — изящная спираль из коржа и крема.",
+    ingr:"eggs, sugar, flour, vanilla, whipped cream, fruit or jam.",
+    ingrRu:"яйца, сахар, мука, ваниль, взбитые сливки, фрукты или джем.",
+    variations:[
+      { img:"https://i.imgur.com/uno3x1l.png" }, { img:"https://i.imgur.com/ze2VNRm.jpeg" },
+      { img:"https://i.imgur.com/PeXuaZN.jpg", ...V.forestGlade },
+      { img:"https://i.imgur.com/h61yun5.jpeg", ...V.forestGlade }
+    ]
+  },
+  {
+    id:19, name:"Fairytale", nameRu:"Сказка", category:"Classic", tag:"Magical", tagRu:"Волшебный",
+    img:"https://i.imgur.com/LBeJQOj.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"12–15 people.", servesRu:"12–15 человек.",
+    desc:"The Fairytale cake is soft, moist sponge layers generously coated in custard cream with alternating layers of mixed berry jam. The custard's smooth richness balances the lively berries for a harmonious, delicately sweet bite.",
+    descRu:"«Сказка» — мягкие влажные бисквитные коржи, щедро промазанные заварным кремом, с прослойками джема из лесных ягод. Гладкая насыщенность крема уравновешивает яркость ягод — гармоничный, нежно‑сладкий вкус.",
+    ingr:"flour, eggs, milk, vanilla, sugar, mixed berry jam.",
+    ingrRu:"мука, яйца, молоко, ваниль, сахар, джем из лесных ягод.",
+    variations:[ { img:"https://i.imgur.com/LBeJQOj.jpeg" }, { img:"https://i.imgur.com/qPLQ4Fu.png" } ]
+  },
+  {
+    id:20, name:"Pecan Cake", nameRu:"Кекс с пеканом", category:"Nut", tag:"Rich", tagRu:"Насыщенный",
+    img:"https://i.imgur.com/gY9VFUX.jpeg", price:"$60",
+    size:"11″ x 9″.", sizeRu:"11″ x 9″.", serves:"12–15 people.", servesRu:"12–15 человек.",
+    desc:"The Pecan Pound cake is a simple yet flavorful blend of honey, flour, sour cream, eggs, sugar, baking soda, and black tea, with chopped pecans folded in. The tea adds depth while honey and sour cream keep the crumb moist and tender.",
+    descRu:"«Кекс с пеканом» — простой, но ароматный кекс из мёда, муки, сметаны, яиц, сахара, соды и чёрного чая с кусочками пекана в тесте. Чай придаёт глубину, а мёд и сметана — влажный, нежный мякиш.",
+    ingr:"honey, eggs, sugar, flour, sour cream, baking soda, and black tea.",
+    ingrRu:"мёд, яйца, сахар, мука, сметана, сода и чёрный чай.",
+    variations:[
+      { img:"https://i.imgur.com/gY9VFUX.jpeg" }, { img:"https://i.imgur.com/tmgpyto.png" }, { img:"https://i.imgur.com/GnJXOel.png" }
+    ]
+  },
+  {
+    id:21, name:"Charlotte", nameRu:"Клубничная шарлотка", category:"Mousse", tag:"French", tagRu:"Французский",
+    img:"https://i.imgur.com/JztsnwL.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"15–20 people.", servesRu:"15–20 человек.",
+    desc:"The Strawberry Charlotte is a mousse cake of moist ladyfingers lining the pan, filled with Bavarian cream blended with strawberry mousse. The mousse captures bright berry sweetness while staying cloud-like, with a graceful contrast of pale biscuit and rosy mousse.",
+    descRu:"«Клубничная шарлотка» — муссовый торт из нежных савоярди, выстилающих форму, с начинкой из баварского крема с клубничным муссом. Мусс передаёт яркую сладость ягод, оставаясь облачно‑лёгким. Изящный контраст бледной «рубашки» и розового мусса.",
+    ingr:"flour, eggs, milk, vanilla, heavy cream, sugar, strawberries, and gelatine.",
+    ingrRu:"мука, яйца, молоко, ваниль, жирные сливки, сахар, клубника и желатин.",
+    variations:[ { img:"https://i.imgur.com/JztsnwL.jpeg" }, { img:"https://i.imgur.com/6r0Fura.png" } ]
+  },
+  {
+    id:22, name:"Polar Bear", nameRu:"Белый медведь", category:"Specialty", tag:"Showstopper", tagRu:"Гвоздь программы",
+    img:"https://i.imgur.com/crPL5IR.jpeg", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Polar Bear Cake is a rich vanilla and chocolate layered cake with a chocolaty gold finish. Tender cocoa sponge and a light vanilla layer are filled with whipped mascarpone-and-cream frosting, cloaked in pale mascarpone with delicate chocolate accents — the quiet elegance of fresh snowfall.",
+    descRu:"«Белый медведь» — насыщенный ванильно‑шоколадный слоёный торт с золотисто‑шоколадным финишем. Нежный какао‑бисквит и лёгкий ванильный слой с кремом из взбитого маскарпоне и сливок, в пастельной шапке из маскарпоне с шоколадными акцентами — спокойная элегантность свежего снега.",
+    ingr:"flour, sour cream, sugar, butter, cocoa powder, heavy cream, mascarpone, powdered sugar, chocolate.",
+    ingrRu:"мука, сметана, сахар, масло, какао‑порошок, жирные сливки, маскарпоне, сахарная пудра, шоколад.",
+    variations:[
+      { img:"https://i.imgur.com/crPL5IR.jpeg" }, { img:"https://i.imgur.com/uXQxoQZ.jpg" }, { img:"https://i.imgur.com/WTPKg2K.jpeg" }
+    ]
+  },
+  {
+    id:23, name:"Drunken Cherry", nameRu:"Пьяная вишня", category:"Chocolate", tag:"Indulgent", tagRu:"Роскошный",
+    img:"https://i.imgur.com/rfLUhEQ.png", price:"$100",
+    size:"10 inches.", sizeRu:"10 дюймов.", serves:"10–15 people.", servesRu:"10–15 человек.",
+    desc:"The Drunken Cherry cake is imbued with tart cherries soaked in cognac for a deep, aromatic sweetness. A smooth cream filling embraces tender cognac-infused cherries, and as it rests the cherries release their juices for a harmonious blend of tartness and warmth.",
+    descRu:"«Пьяная вишня» — торт, пропитанный кислой вишней, вымоченной в коньяке, с глубокой ароматной сладостью. Гладкий крем обнимает нежную вишню в коньяке; со временем вишня отдаёт сок коржам — гармония кислинки и тепла.",
+    ingr:"flour, eggs, sugar, butter, condensed milk, cocoa powder, sour cherries, cognac.",
+    ingrRu:"мука, яйца, сахар, масло, сгущённое молоко, какао‑порошок, вишня, коньяк.",
+    variations:[ { img:"https://i.imgur.com/rfLUhEQ.png" }, { img:"https://i.imgur.com/QuIdpUl.png" } ]
+  },
+  {
+    id:24, name:"Cream Puffs", nameRu:"Заварные пирожные", category:"Pastry", tag:"Crowd Favorite", tagRu:"Любимец гостей",
+    img:"https://i.imgur.com/Et4QqLT.jpeg", price:"$30",
+    size:"", sizeRu:"", serves:"Comes in a pack of 10.", servesRu:"Продаётся упаковкой по 10 штук.",
+    desc:"Cream puffs are delicate choux pastry baked into light, hollow shells with a crisp golden exterior and tender interior, filled with smooth custard or whipped cream. A perfect balance of crisp and creamy.",
+    descRu:"Заварные пирожные — нежное заварное тесто, запечённое в лёгкие полые оболочки с хрустящей золотистой корочкой и воздушной серединкой, наполненные гладким заварным кремом или взбитыми сливками. Идеальный баланс хрустящего и кремового.",
+    ingr:"flour, eggs, sugar, butter, milk (can be ordered with either custard or whipped cream).",
+    ingrRu:"мука, яйца, сахар, масло, молоко (на выбор — с заварным кремом или взбитыми сливками).",
+    variations:[
+      { img:"https://i.imgur.com/Et4QqLT.jpeg", name:"Cream Puffs with Custard Filling", nameRu:"Заварные пирожные с заварным кремом", id:"cream-puffs-with-custard-filling" },
+      { img:"https://i.imgur.com/Et4QqLT.jpeg", name:"Cream Puffs with Whipped Cream Filling", nameRu:"Заварные пирожные со взбитыми сливками", id:"cream-puffs-with-whipped-cream-filling" }
+    ]
+  },
+  {
+    id:25, name:"Kartoshka", nameRu:"Картошка", category:"Pastry", tag:"Traditional", tagRu:"Традиционный",
+    img:"https://i.imgur.com/hRNJpo3.jpeg", price:"$45",
+    size:"", sizeRu:"", serves:"Comes in a pack of 10.", servesRu:"Продаётся упаковкой по 10 штук.",
+    desc:"Kartoshka is a truffle-like pastry shaped like a small potato — crumbled sponge with condensed milk, butter, and cocoa, rolled and coated in chocolate glaze, often topped with pistachios. Dense, chocolaty, and smooth.",
+    descRu:"«Картошка» — пирожное с трюфельной текстурой в форме картофелины: крошка бисквита со сгущёнкой, маслом и какао, скатанная и покрытая шоколадной глазурью, часто с фисташками. Плотное, шоколадное и гладкое.",
+    ingr:"flour, eggs, sugar, butter, milk, condensed milk, cocoa powder, cognac.",
+    ingrRu:"мука, яйца, сахар, масло, молоко, сгущённое молоко, какао‑порошок, коньяк.",
+    variations:[ { img:"https://i.imgur.com/hRNJpo3.jpeg" }, { img:"https://i.imgur.com/Jvyfkmj.jpeg" } ]
+  },
+  {
+    id:26, name:"Baklava", nameRu:"Пахлава", category:"Pastry", tag:"Middle Eastern", tagRu:"Ближневосточный",
+    img:"https://i.imgur.com/JMtJu2p.jpeg", price:"$40",
+    size:"", sizeRu:"", serves:"Comes in a pack of 10.", servesRu:"Продаётся упаковкой по 10 штук.",
+    desc:"Baklava is a honey-soaked pastry of dozens of crisp, buttery phyllo layers with finely chopped walnuts and pistachios and a hint of cinnamon, drenched in fragrant honey-citrus syrup and finished with crushed pistachios.",
+    descRu:"Пахлава — пропитанная мёдом выпечка из десятков хрустящих масляных слоёв теста фило с грецкими орехами и фисташками и ноткой корицы, залитая ароматным медово‑цитрусовым сиропом и посыпанная фисташками.",
+    ingr:"phyllo dough, melted butter, walnuts, pistachios, sugar, cinnamon, honey, water, lemon juice, and a touch of orange zest.",
+    ingrRu:"тесто фило, растопленное масло, грецкие орехи, фисташки, сахар, корица, мёд, вода, лимонный сок и немного апельсиновой цедры.",
+    variations:[ { img:"https://i.imgur.com/JMtJu2p.jpeg" }, { img:"https://i.imgur.com/HQ3AzpV.jpeg" } ]
+  },
+  {
+    id:27, name:"Zefir", nameRu:"Зефир", category:"Pastry", tag:"Russian", tagRu:"Русский",
+    img:"https://i.imgur.com/oH0POqa.jpeg", price:"$10",
+    size:"", sizeRu:"", serves:"Comes in a pack of 12.", servesRu:"Продаётся упаковкой по 12 штук.",
+    desc:"Zefir is a light, fruit-whipped confection with a soft, cloudlike texture — pureed apples or berries blended with sugar and whipped egg whites, piped into airy spirals with a delicate shell and a clean, bright flavor.",
+    descRu:"Зефир — лёгкое фруктово‑взбитое лакомство с мягкой, облачной текстурой: пюре яблок или ягод с сахаром и взбитыми белками, сформованное в воздушные спирали с нежной корочкой и чистым ярким вкусом.",
+    ingr:"egg whites, sugar syrup, and berries.", ingrRu:"яичные белки, сахарный сироп и ягоды.",
+    variations:[ { img:"https://i.imgur.com/oH0POqa.jpeg" }, { img:"https://i.imgur.com/XnAHD56.jpeg" } ]
+  }
+];
+
+/* Seed reviews (always shown). Approved reviews from the Google Sheet are added to these. */
+const SEED_REVIEWS = [
+  { name:"Sarah K.",   stars:5, emoji:"💫", date:"Nov 2024",
+    text:"The Napoleon cake was absolutely breathtaking. Every layer was perfect and the cream was incredibly light. My whole family is already asking when we can order again!",
+    textRu:"Торт «Наполеон» был просто захватывающим. Каждый слой идеален, а крем невероятно лёгкий. Вся семья уже спрашивает, когда мы закажем снова!" },
+  { name:"Rebecca M.", stars:5, emoji:"🎂", date:"Oct 2024",
+    text:"Ordered the Pavlova for my daughter's birthday and it was the most beautiful cake I've ever seen in person. The meringue was perfectly crispy and the inside was soft as a cloud.",
+    textRu:"Заказала «Павлову» на день рождения дочери — самый красивый торт, что я видела вживую. Меренга идеально хрустящая, а внутри мягкая как облако." },
+  { name:"David L.",   stars:5, emoji:"🍯", date:"Oct 2024",
+    text:"The Medovik brought me right back to my grandmother's kitchen in Russia. Authentic, delicious, and made with so much love. You can taste the difference.",
+    textRu:"«Медовик» мгновенно вернул меня на бабушкину кухню в России. Аутентично, вкусно и с такой любовью. Разницу чувствуешь сразу." },
+  { name:"Miriam T.",  stars:5, emoji:"🐦", date:"Sep 2024",
+    text:"Sweet Mishpuchah is the real deal. I've tried many bakeries but nothing compares to the quality here. The Bird's Milk cake was unbelievably good — exactly as I remembered.",
+    textRu:"Sweet Mishpuchah — это нечто настоящее. Пробовала много пекарен, но качество здесь несравнимо. «Птичье молоко» было невероятным — точь‑в‑точь как я помнила." },
+  { name:"Jake F.",    stars:5, emoji:"🐻‍❄️", date:"Sep 2024",
+    text:"The Polar Bear cake for my son's birthday was beyond anything I expected. Every kid at the party was speechless. And it tasted just as incredible as it looked!",
+    textRu:"Торт «Белый медведь» на день рождения сына превзошёл все ожидания. Все дети на празднике потеряли дар речи. А на вкус — так же великолепен, как на вид!" },
+  { name:"Anna V.",    stars:5, emoji:"🌸", date:"Aug 2024",
+    text:"The Kievsky cake is perfection. I've been searching for an authentic version for years and this is it. The hazelnut meringue layers are extraordinary. This is a gem.",
+    textRu:"«Киевский» торт — это совершенство. Годами искала аутентичную версию — и вот она. Коржи из фундучной меренги — нечто выдающееся. Настоящая находка." }
+];
+/* ===== __02_i18n.js ===== */
+/* ============================================================================
+   SWEET MISHPUCHAH — TRANSLATIONS  (English + curated Russian)
+   ----------------------------------------------------------------------------
+   HOW TO EDIT:
+   • Every visible UI string lives here, keyed by name.
+   • "en" is English, "ru" is Russian. Edit either freely.
+   • {tokens} in a string are filled in by the app (e.g. {total}, {date}).
+   ============================================================================ */
+const I18N = {
+  en: {
+    /* nav */
+    "nav.home":"Home", "nav.gallery":"Gallery", "nav.order":"Order", "nav.reviews":"Reviews",
+    "nav.contact":"Contact", "nav.account":"Account", "nav.orderNow":"Order Now",
+
+    /* ribbon */
+    "ribbon.title":"Our Menu", "ribbon.subtitle":"Click any cake to explore · Use arrows or drag to browse",
+    "ribbon.auto":"Auto", "ribbon.scroll":"Scroll", "ribbon.viewDetails":"View Details",
+
+    /* promo */
+    "promo.title":"Attention Special Promotion:",
+    "promo.line1":"In celebration of our grand opening we are offering a special promotion!",
+    "promo.line2":"We are providing a free gift of our delicious pastries with every order!",
+
+    /* hero */
+    "hero.eyebrow":"Family-Owned Artisan Bakery",
+    "hero.title":"Baked with <em>love,</em><br>shared with <em>family.</em>",
+    "hero.mission":"We are a small family-owned, authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that will satisfy your every craving.",
+    "hero.placeOrder":"Place an Order", "hero.browseMenu":"Browse Menu",
+    "hero.badge":"✨ Freshly Baked to Order", "hero.cakePreview":"Napoleon Cake",
+    "hero.cakeSub":"Flaky layers with vanilla cream",
+    "stat.varieties":"Cake Varieties", "stat.homemade":"Homemade",
+    "stat.familyRecipe":"Family Recipe", "stat.customOrders":"Custom Orders",
+
+    /* about */
+    "about.eyebrow":"Our Story",
+    "about.title":"A family tradition, baked into every layer.",
+    "about.body":"Mishpuchah — the Yiddish word for family — is at the heart of everything we do. Every cake that leaves our kitchen carries generations of love, authentic recipes, and the warmth of a home kitchen. We don't cut corners, we don't use shortcuts, and we never compromise on quality.",
+    "about.pillar1Title":"Homemade & Authentic",
+    "about.pillar1Text":"Every recipe is made from scratch using traditional family methods, passed down through generations.",
+    "about.pillar2Title":"Quality Ingredients",
+    "about.pillar2Text":"We source only the finest ingredients — real cream, fresh fruit, pure vanilla — nothing artificial.",
+    "about.pillar3Title":"Beautifully Crafted",
+    "about.pillar3Text":"Every cake is an edible work of art, designed to look as incredible as it tastes.",
+
+    /* gallery */
+    "gallery.eyebrow":"Our Creations", "gallery.title":"The Full Collection",
+    "gallery.sub":"Every cake is baked fresh to order. Browse our full selection below — click any item for details.",
+
+    /* categories */
+    "cat.All":"All", "cat.Classic":"Classic", "cat.Nut":"Nut", "cat.Specialty":"Specialty",
+    "cat.Fruit":"Fruit", "cat.Cheesecake":"Cheesecake", "cat.Sponge":"Sponge", "cat.Meringue":"Meringue",
+    "cat.Spiced":"Spiced", "cat.Mousse":"Mousse", "cat.Chocolate":"Chocolate", "cat.Pastry":"Pastry",
+
+    /* modal */
+    "modal.ingredients":"Ingredients:", "modal.size":"Size", "modal.serves":"Serves",
+    "modal.category":"Category", "modal.bakeTime":"Bake Time", "modal.bakeTimeValue":"3–5 days",
+    "modal.price":"Price", "modal.addToCart":"Add to Cart", "modal.keepBrowsing":"Keep Browsing",
+    "modal.added":"Added ✓", "modal.design":"Design {n} of {total}",
+
+    /* order / checkout */
+    "order.title":"Place Your Order", "order.sub":"Review your cart, choose a date, and check out",
+    "order.noticeStrong":"⏰ Please Note:",
+    "order.noticeText":"Cakes are baked fresh to order. The earliest available pickup date reflects our bake time and daily order limits.",
+    "order.yourCart":"Your Cart", "order.cartHint":"Add cakes from the menu or gallery, then adjust quantities here.",
+    "order.colItem":"Item", "order.colPrice":"Price", "order.colQty":"Qty", "order.colSubtotal":"Subtotal",
+    "order.total":"Total", "order.clearCart":"Clear Cart", "order.browseMore":"+ Browse more cakes",
+    "order.detailsTitle":"Order Details",
+    "order.loginGate":"Please sign in to place an order.", "order.loginLink":"Sign in or create an account →",
+    "order.orderDate":"Order / Pickup Date *", "order.fullName":"Full Name *", "order.fullNamePh":"First and last name",
+    "order.phone":"Phone *", "order.phonePh":"For order updates", "order.email":"Email *", "order.emailPh":"you@example.com",
+    "order.writing":"Cake Writing", "order.writingPh":"Example: “Happy Birthday, Anna!”",
+    "order.payment":"Payment Method *", "order.recommended":"Recommended", "order.popular":"Popular",
+    "order.accepted":"Accepted", "order.cash":"Cash", "order.inPerson":"In person",
+    "order.placeOrder":"Place Order →",
+
+    /* reviews */
+    "reviews.eyebrow":"Customer Love", "reviews.title":"What Our Family Says",
+    "reviews.sub":"Every review is a story of a moment made sweeter. We're grateful for every one.",
+    "reviews.shareEyebrow":"Share Your Experience", "reviews.leaveTitle":"Leave a Review",
+    "reviews.yourName":"Your Name", "reviews.yourNamePh":"Your name", "reviews.rating":"Rating",
+    "reviews.yourReview":"Your Review", "reviews.yourReviewPh":"Tell us about your experience…",
+    "reviews.submit":"Submit Review →",
+    "reviews.moderationNote":"Reviews are read by our family before they appear, so it may take a little while to show up.",
+
+    /* contact */
+    "contact.eyebrow":"Get In Touch", "contact.title":"We'd Love to Hear from You",
+    "contact.sub":"Have a question? Curious about a custom order? We're just a message away.",
+    "contact.reachTitle":"Reach Out Anytime",
+    "contact.reachBody":"We're a small family business and we personally respond to every message. Whether you have a question about our menu, want to request a custom cake, or just want to say hi — don't hesitate to reach out.",
+    "contact.phoneLabel":"Phone / Text", "contact.phoneValue":"Available on request",
+    "contact.emailLabel":"Email", "contact.responseLabel":"Response Time", "contact.responseValue":"Within 24 hours",
+    "contact.bakeLabel":"Bake Time", "contact.bakeValue":"3–5 days recommended",
+    "contact.formName":"Your Name", "contact.formNamePh":"Your full name", "contact.formEmail":"Email",
+    "contact.formEmailPh":"you@example.com", "contact.formSubject":"Subject",
+    "contact.subj1":"General Inquiry", "contact.subj2":"Custom Order Question", "contact.subj3":"Order Status",
+    "contact.subj4":"Feedback", "contact.subj5":"Other", "contact.formMessage":"Message",
+    "contact.formMessagePh":"Write your message here…", "contact.send":"Send Message →",
+
+    /* account */
+    "account.eyebrow":"Your Account", "account.title":"Sign In or Create an Account",
+    "account.sub":"Order from your account, keep an order history, and check out faster.",
+    "account.signIn":"Sign In", "account.createAccount":"Create Account", "account.email":"Email",
+    "account.password":"Password", "account.passwordPh":"At least 6 characters", "account.forgot":"Forgot your password?",
+    "account.name":"Full Name", "account.phone":"Phone",
+    "account.forgotIntro":"Enter your email and we'll send a reset code. If you're stuck, our family can reset it for you — just contact us.",
+    "account.sendCode":"Send Reset Code", "account.resetCode":"Reset Code", "account.resetCodePh":"6-digit code",
+    "account.newPassword":"New Password", "account.setPassword":"Set New Password", "account.backToSignIn":"← Back to sign in",
+    "account.hello":"Hello", "account.signOut":"Sign Out", "account.profile":"Profile", "account.saveProfile":"Save Profile",
+    "account.orderHistory":"Order History", "account.loadingOrders":"Loading your orders…",
+    "account.noOrders":"No orders yet. Your past orders will appear here.",
+
+    /* admin */
+    "admin.eyebrow":"Admin", "admin.title":"Bakery Admin Panel", "admin.pendingReviews":"Pending Reviews",
+    "admin.loading":"Loading…", "admin.helpCustomers":"Help a Customer",
+    "admin.helpIntro":"Reset a password or sign someone out if they are locked out of their account.",
+    "admin.customerEmail":"Customer Email", "admin.newPassword":"New Temporary Password",
+    "admin.setPassword":"Set Password", "admin.forceLogout":"Force Sign-Out", "admin.allUsers":"All Accounts",
+    "admin.noPending":"No reviews waiting. You're all caught up!", "admin.approve":"Approve", "admin.reject":"Reject",
+    "admin.help":"Help", "admin.role":"Role",
+
+    /* footer */
+    "footer.brandText":"A small family-owned authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that satisfy your every craving.",
+    "footer.navigate":"Navigate", "footer.ourCakes":"Our Cakes", "footer.viewAll":"View All →",
+    "footer.copyright":"© 2026 Sweet Mishpuchah. Made with", "footer.byFamily":"by family, for family.",
+    "footer.freshNote":"All orders are baked fresh to order.",
+
+    /* dynamic messages */
+    "msg.added":"Added ✓",
+    "msg.cartEmpty":"Your cart is empty. Add cakes from the menu first.",
+    "msg.chooseDate":"Please choose a valid order date.",
+    "msg.fixContact":"Please add your full name, a valid email, and a phone number.",
+    "msg.choosePay":"Please choose a payment method.",
+    "msg.loginToOrder":"Please sign in to place your order.",
+    "msg.processing":"Placing your order…",
+    "msg.cartCleared":"Cart cleared.",
+    "msg.dateEarliest":"Earliest available date: {date}.",
+    "msg.dateSet":"Order date set to: {date}.",
+    "msg.dateUnavailable":"This date is unavailable. Please choose another.",
+    "msg.dateInvalid":"Invalid date. Earliest available: {date}.",
+    "payPrev.zelle":"Send {total} via Zelle to {handle}. Include your name and order number (shown after checkout) in the note.",
+    "payPrev.venmo":"Send {total} via Venmo to {handle}. Include your name and order number (shown after checkout) in the note.",
+    "payPrev.cashapp":"Send {total} via Cash App to {handle}. Include your name and order number (shown after checkout) in the note.",
+    "payPrev.cash":"You'll pay in cash at pickup — no payment is required right now.",
+    "msg.orderSuccess":"Your order has been placed successfully.\n\nOrder ID: {id}\nPickup date: {date}\nTotal: {total}\n\n{payNote}\n\nYour order will be ready for pickup on {date} at {address}.\nA receipt has been emailed to you.",
+    "pay.zelleNote":"Next step: please send {total} via Zelle to {handle} and include your full name and Order ID ({id}) in the note.",
+    "pay.venmoNote":"Next step: please send {total} via Venmo to {handle} and include your full name and Order ID ({id}) in the note.",
+    "pay.cashappNote":"Next step: please send {total} via Cash App to {handle} and include your full name and Order ID ({id}) in the note.",
+    "pay.cashNote":"You will pay in cash at pickup. No payment is required right now.",
+    "auth.fillLogin":"Enter your email and password.",
+    "auth.fillSignup":"Please fill in your name, a valid email, and a password (6+ characters).",
+    "auth.loggedIn":"Signed in. Welcome back!",
+    "auth.created":"Account created — welcome to the family!",
+    "auth.enterEmail":"Enter your email above first.",
+    "auth.codeSent":"If that email has an account, a reset code has been sent. Enter it below.",
+    "auth.fillReset":"Enter the reset code and a new password (6+ characters).",
+    "auth.resetOk":"Password updated. You can now sign in.",
+    "auth.profileSaved":"Profile saved.",
+    "auth.signedOut":"Signed out.",
+    "rev.fill":"Please add your name, a rating, and a short review.",
+    "rev.submitted":"Thank you! Your review was submitted and will appear once approved.",
+    "rev.needName":"Please add your name.",
+    "contact.fill":"Please add your name, a valid email, and a message.",
+    "contact.sent":"Message sent! We'll get back to you within 24 hours.",
+    "admin.fillUser":"Enter the customer's email and a new password (6+ characters).",
+    "common.loadError":"Something went wrong. Please try again."
+  },
+
+  ru: {
+    /* nav */
+    "nav.home":"Главная", "nav.gallery":"Галерея", "nav.order":"Заказ", "nav.reviews":"Отзывы",
+    "nav.contact":"Контакты", "nav.account":"Кабинет", "nav.orderNow":"Заказать",
+
+    /* ribbon */
+    "ribbon.title":"Наше меню", "ribbon.subtitle":"Нажмите на торт, чтобы узнать больше · Листайте стрелками или перетаскиванием",
+    "ribbon.auto":"Авто", "ribbon.scroll":"Прокрутка", "ribbon.viewDetails":"Подробнее",
+
+    /* promo */
+    "promo.title":"Внимание! Специальная акция:",
+    "promo.line1":"В честь нашего торжественного открытия мы проводим специальную акцию!",
+    "promo.line2":"К каждому заказу мы дарим бесплатный подарок — наши восхитительные пирожные!",
+
+    /* hero */
+    "hero.eyebrow":"Семейная домашняя пекарня",
+    "hero.title":"Испечено с <em>любовью,</em><br>разделено с <em>семьёй.</em>",
+    "hero.mission":"Мы — небольшая семейная домашняя пекарня, которая стремится дарить самые вкусные и красивые торты и десерты, утоляющие любое ваше желание.",
+    "hero.placeOrder":"Сделать заказ", "hero.browseMenu":"Смотреть меню",
+    "hero.badge":"✨ Печём свежим под заказ", "hero.cakePreview":"Торт «Наполеон»",
+    "hero.cakeSub":"Хрустящие слои с ванильным кремом",
+    "stat.varieties":"Видов тортов", "stat.homemade":"Домашнее",
+    "stat.familyRecipe":"Семейный рецепт", "stat.customOrders":"Под заказ",
+
+    /* about */
+    "about.eyebrow":"Наша история",
+    "about.title":"Семейная традиция, испечённая в каждом слое.",
+    "about.body":"Мишпуха — слово на идише, означающее «семья» — в основе всего, что мы делаем. Каждый торт, выходящий из нашей кухни, несёт поколения любви, аутентичные рецепты и тепло домашней кухни. Мы не идём на компромиссы и никогда не жертвуем качеством.",
+    "about.pillar1Title":"Домашнее и аутентичное",
+    "about.pillar1Text":"Каждый рецепт готовится с нуля по традиционным семейным методам, передаваемым из поколения в поколение.",
+    "about.pillar2Title":"Качественные ингредиенты",
+    "about.pillar2Text":"Мы используем только лучшие ингредиенты — настоящие сливки, свежие фрукты, чистую ваниль — ничего искусственного.",
+    "about.pillar3Title":"Красиво оформлено",
+    "about.pillar3Text":"Каждый торт — съедобное произведение искусства, столь же прекрасное на вид, сколь и на вкус.",
+
+    /* gallery */
+    "gallery.eyebrow":"Наши творения", "gallery.title":"Полная коллекция",
+    "gallery.sub":"Каждый торт печётся свежим под заказ. Просмотрите наш ассортимент — нажмите на любой, чтобы узнать детали.",
+
+    /* categories */
+    "cat.All":"Все", "cat.Classic":"Классические", "cat.Nut":"Ореховые", "cat.Specialty":"Особые",
+    "cat.Fruit":"Фруктовые", "cat.Cheesecake":"Чизкейки", "cat.Sponge":"Бисквитные", "cat.Meringue":"Меренговые",
+    "cat.Spiced":"Пряные", "cat.Mousse":"Муссовые", "cat.Chocolate":"Шоколадные", "cat.Pastry":"Выпечка",
+
+    /* modal */
+    "modal.ingredients":"Состав:", "modal.size":"Размер", "modal.serves":"Порций",
+    "modal.category":"Категория", "modal.bakeTime":"Время выпечки", "modal.bakeTimeValue":"3–5 дней",
+    "modal.price":"Цена", "modal.addToCart":"В корзину", "modal.keepBrowsing":"Продолжить просмотр",
+    "modal.added":"Добавлено ✓", "modal.design":"Дизайн {n} из {total}",
+
+    /* order / checkout */
+    "order.title":"Оформите заказ", "order.sub":"Проверьте корзину, выберите дату и оформите заказ",
+    "order.noticeStrong":"⏰ Обратите внимание:",
+    "order.noticeText":"Торты печём свежими под заказ. Ближайшая доступная дата получения учитывает время выпечки и дневной лимит заказов.",
+    "order.yourCart":"Ваша корзина", "order.cartHint":"Добавляйте торты из меню или галереи и меняйте количество здесь.",
+    "order.colItem":"Товар", "order.colPrice":"Цена", "order.colQty":"Кол-во", "order.colSubtotal":"Сумма",
+    "order.total":"Итого", "order.clearCart":"Очистить корзину", "order.browseMore":"+ Смотреть ещё торты",
+    "order.detailsTitle":"Детали заказа",
+    "order.loginGate":"Пожалуйста, войдите, чтобы оформить заказ.", "order.loginLink":"Войти или создать аккаунт →",
+    "order.orderDate":"Дата заказа / получения *", "order.fullName":"Полное имя *", "order.fullNamePh":"Имя и фамилия",
+    "order.phone":"Телефон *", "order.phonePh":"Для уведомлений о заказе", "order.email":"Эл. почта *", "order.emailPh":"you@example.com",
+    "order.writing":"Надпись на торте", "order.writingPh":"Например: «С днём рождения, Анна!»",
+    "order.payment":"Способ оплаты *", "order.recommended":"Рекомендуем", "order.popular":"Популярно",
+    "order.accepted":"Принимается", "order.cash":"Наличные", "order.inPerson":"Лично",
+    "order.placeOrder":"Оформить заказ →",
+
+    /* reviews */
+    "reviews.eyebrow":"С любовью от гостей", "reviews.title":"Что говорит наша семья гостей",
+    "reviews.sub":"Каждый отзыв — история момента, ставшего слаще. Мы благодарны за каждый из них.",
+    "reviews.shareEyebrow":"Поделитесь впечатлением", "reviews.leaveTitle":"Оставить отзыв",
+    "reviews.yourName":"Ваше имя", "reviews.yourNamePh":"Ваше имя", "reviews.rating":"Оценка",
+    "reviews.yourReview":"Ваш отзыв", "reviews.yourReviewPh":"Расскажите о ваших впечатлениях…",
+    "reviews.submit":"Отправить отзыв →",
+    "reviews.moderationNote":"Отзывы просматривает наша семья перед публикацией, поэтому они появляются не сразу.",
+
+    /* contact */
+    "contact.eyebrow":"Свяжитесь с нами", "contact.title":"Будем рады вашему сообщению",
+    "contact.sub":"Есть вопрос? Интересует индивидуальный заказ? Напишите нам.",
+    "contact.reachTitle":"Пишите в любое время",
+    "contact.reachBody":"Мы — небольшой семейный бизнес и лично отвечаем на каждое сообщение. Есть вопрос о меню, хотите заказать торт на заказ или просто поздороваться — пишите нам без колебаний.",
+    "contact.phoneLabel":"Телефон / СМС", "contact.phoneValue":"По запросу",
+    "contact.emailLabel":"Эл. почта", "contact.responseLabel":"Время ответа", "contact.responseValue":"В течение 24 часов",
+    "contact.bakeLabel":"Время выпечки", "contact.bakeValue":"Рекомендуем 3–5 дней",
+    "contact.formName":"Ваше имя", "contact.formNamePh":"Имя и фамилия", "contact.formEmail":"Эл. почта",
+    "contact.formEmailPh":"you@example.com", "contact.formSubject":"Тема",
+    "contact.subj1":"Общий вопрос", "contact.subj2":"Вопрос об индивидуальном заказе", "contact.subj3":"Статус заказа",
+    "contact.subj4":"Отзыв", "contact.subj5":"Другое", "contact.formMessage":"Сообщение",
+    "contact.formMessagePh":"Напишите ваше сообщение здесь…", "contact.send":"Отправить →",
+
+    /* account */
+    "account.eyebrow":"Личный кабинет", "account.title":"Войдите или создайте аккаунт",
+    "account.sub":"Заказывайте из личного кабинета, храните историю заказов и оформляйте быстрее.",
+    "account.signIn":"Войти", "account.createAccount":"Создать аккаунт", "account.email":"Эл. почта",
+    "account.password":"Пароль", "account.passwordPh":"Не менее 6 символов", "account.forgot":"Забыли пароль?",
+    "account.name":"Полное имя", "account.phone":"Телефон",
+    "account.forgotIntro":"Введите эл. почту, и мы пришлём код для сброса. Если не получается — наша семья сбросит пароль для вас, просто напишите нам.",
+    "account.sendCode":"Отправить код", "account.resetCode":"Код сброса", "account.resetCodePh":"6-значный код",
+    "account.newPassword":"Новый пароль", "account.setPassword":"Установить пароль", "account.backToSignIn":"← Назад ко входу",
+    "account.hello":"Здравствуйте", "account.signOut":"Выйти", "account.profile":"Профиль", "account.saveProfile":"Сохранить профиль",
+    "account.orderHistory":"История заказов", "account.loadingOrders":"Загружаем ваши заказы…",
+    "account.noOrders":"Заказов пока нет. Здесь появятся ваши прошлые заказы.",
+
+    /* admin */
+    "admin.eyebrow":"Админ", "admin.title":"Панель администратора пекарни", "admin.pendingReviews":"Отзывы на модерации",
+    "admin.loading":"Загрузка…", "admin.helpCustomers":"Помочь клиенту",
+    "admin.helpIntro":"Сбросьте пароль или выйдите из аккаунта клиента, если он не может войти.",
+    "admin.customerEmail":"Эл. почта клиента", "admin.newPassword":"Новый временный пароль",
+    "admin.setPassword":"Установить пароль", "admin.forceLogout":"Принудительный выход", "admin.allUsers":"Все аккаунты",
+    "admin.noPending":"Отзывов на модерации нет. Всё разобрано!", "admin.approve":"Одобрить", "admin.reject":"Отклонить",
+    "admin.help":"Помощь", "admin.role":"Роль",
+
+    /* footer */
+    "footer.brandText":"Небольшая семейная домашняя пекарня, которая стремится дарить самые вкусные и красивые торты и десерты, утоляющие любое ваше желание.",
+    "footer.navigate":"Навигация", "footer.ourCakes":"Наши торты", "footer.viewAll":"Смотреть все →",
+    "footer.copyright":"© 2026 Sweet Mishpuchah. Сделано с", "footer.byFamily":"семьёй и для семьи.",
+    "footer.freshNote":"Все заказы выпекаются свежими под заказ.",
+
+    /* dynamic messages */
+    "msg.added":"Добавлено ✓",
+    "msg.cartEmpty":"Ваша корзина пуста. Сначала добавьте торты из меню.",
+    "msg.chooseDate":"Пожалуйста, выберите корректную дату заказа.",
+    "msg.fixContact":"Укажите полное имя, корректную эл. почту и телефон.",
+    "msg.choosePay":"Пожалуйста, выберите способ оплаты.",
+    "msg.loginToOrder":"Пожалуйста, войдите, чтобы оформить заказ.",
+    "msg.processing":"Оформляем ваш заказ…",
+    "msg.cartCleared":"Корзина очищена.",
+    "msg.dateEarliest":"Ближайшая доступная дата: {date}.",
+    "msg.dateSet":"Дата заказа: {date}.",
+    "msg.dateUnavailable":"Эта дата недоступна. Пожалуйста, выберите другую.",
+    "msg.dateInvalid":"Некорректная дата. Ближайшая доступная: {date}.",
+    "payPrev.zelle":"Отправьте {total} через Zelle на {handle}. Укажите имя и номер заказа (появится после оформления) в примечании.",
+    "payPrev.venmo":"Отправьте {total} через Venmo на {handle}. Укажите имя и номер заказа (появится после оформления) в примечании.",
+    "payPrev.cashapp":"Отправьте {total} через Cash App на {handle}. Укажите имя и номер заказа (появится после оформления) в примечании.",
+    "payPrev.cash":"Оплата наличными при получении — сейчас платить не нужно.",
+    "msg.orderSuccess":"Ваш заказ успешно оформлен.\n\nНомер заказа: {id}\nДата получения: {date}\nИтого: {total}\n\n{payNote}\n\nВаш заказ будет готов к получению {date} по адресу: {address}.\nЧек отправлен вам на эл. почту.",
+    "pay.zelleNote":"Следующий шаг: отправьте {total} через Zelle на {handle}, указав имя и номер заказа ({id}) в примечании.",
+    "pay.venmoNote":"Следующий шаг: отправьте {total} через Venmo на {handle}, указав имя и номер заказа ({id}) в примечании.",
+    "pay.cashappNote":"Следующий шаг: отправьте {total} через Cash App на {handle}, указав имя и номер заказа ({id}) в примечании.",
+    "pay.cashNote":"Оплата наличными при получении. Сейчас платить не нужно.",
+    "auth.fillLogin":"Введите эл. почту и пароль.",
+    "auth.fillSignup":"Заполните имя, корректную эл. почту и пароль (от 6 символов).",
+    "auth.loggedIn":"Вы вошли. С возвращением!",
+    "auth.created":"Аккаунт создан — добро пожаловать в семью!",
+    "auth.enterEmail":"Сначала введите эл. почту выше.",
+    "auth.codeSent":"Если этот адрес зарегистрирован, код для сброса отправлен. Введите его ниже.",
+    "auth.fillReset":"Введите код сброса и новый пароль (от 6 символов).",
+    "auth.resetOk":"Пароль обновлён. Теперь вы можете войти.",
+    "auth.profileSaved":"Профиль сохранён.",
+    "auth.signedOut":"Вы вышли из аккаунта.",
+    "rev.fill":"Укажите имя, оценку и короткий отзыв.",
+    "rev.submitted":"Спасибо! Ваш отзыв отправлен и появится после одобрения.",
+    "rev.needName":"Пожалуйста, укажите ваше имя.",
+    "contact.fill":"Укажите имя, корректную эл. почту и сообщение.",
+    "contact.sent":"Сообщение отправлено! Мы ответим в течение 24 часов.",
+    "admin.fillUser":"Введите эл. почту клиента и новый пароль (от 6 символов).",
+    "common.loadError":"Что-то пошло не так. Пожалуйста, попробуйте ещё раз."
+  }
+};
+/* ===== __03_app.js ===== */
+/* ============================================================================
+   SWEET MISHPUCHAH — APP LOGIC
+   ----------------------------------------------------------------------------
+   Talks to Code.gs through google.script.run when deployed as a Google Apps
+   Script web app. If opened as a plain file (no Apps Script), it falls back to
+   a localStorage "mock" so you can preview EVERYTHING offline.
+   ============================================================================ */
+
+/* ---- Config mirror (keep in sync with Code.gs CONFIG) ---- */
+var CONFIG = {
+  // ▼▼ PASTE YOUR GOOGLE APPS SCRIPT WEB-APP URL HERE (ends in /exec) ▼▼
+  // This connects the GitHub Pages site to the Google backend (orders, accounts,
+  // reviews, emails). Leave it "" to run as a local offline demo.
+  WEBAPP_URL: "https://script.google.com/macros/s/AKfycbzH1LkH7WmZv6BA5KY_SgtbYRPhnc0TihvqQ-C5JPpLCQ4QKJ5cmiGXXDcxbFRSSxyJ/exec",
+  ADMIN_EMAIL: "thesweetmishpuchah@gmail.com",
+  PICKUP_ADDRESS: "2404 East 28th Street, Brooklyn, New York, 11235",
+  BLOCK_BEFORE_DAYS: 3,
+  BLOCK_AFTER_ORDER_DAYS: 2,
+  MAX_ORDERS_PER_DAY: 2,
+  PAYMENT_HANDLES: { zelle:"thesweetmishpuchah@gmail.com", venmo:"@sweetmishpuchah", cashapp:"$sweetmishpuchah", cash:"" }
+};
+
+/* =====================  i18n  ===================== */
+var LANG = localStorage.getItem('sm_lang') || 'en';
+
+function t(key, vars){
+  var dict = I18N[LANG] || I18N.en;
+  var s = (dict[key] != null) ? dict[key] : (I18N.en[key] != null ? I18N.en[key] : key);
+  if (vars) Object.keys(vars).forEach(function(k){ s = s.split('{'+k+'}').join(vars[k]); });
+  return s;
+}
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+  document.documentElement.lang = LANG;
+  var en = document.getElementById('langEn'), ru = document.getElementById('langRu');
+  if (en && ru){ en.classList.toggle('lang-on', LANG==='en'); ru.classList.toggle('lang-on', LANG==='ru'); }
+}
+function setLang(l){ LANG = (l==='ru') ? 'ru':'en'; localStorage.setItem('sm_lang', LANG); applyI18n(); rerenderDynamic(); }
+function toggleLang(){ setLang(LANG==='en' ? 'ru':'en'); }
+function L(obj, field){ /* pick localized field, fall back to English */
+  if (LANG==='ru' && obj[field+'Ru']) return obj[field+'Ru'];
+  return obj[field] != null ? obj[field] : '';
+}
+
+/* =====================  API layer  =====================
+   1) If CONFIG.WEBAPP_URL is set  -> call the Google backend over the internet
+      (this is the GitHub Pages + Apps Script setup).
+   2) Else if running inside Apps Script -> use the in-page google.script.run bridge.
+   3) Else -> offline localStorage demo (Mock), so the page still works as a file. */
+function hasGAS(){ return !!(window.google && google.script && google.script.run); }
+function api(method, payload){
+  if (CONFIG.WEBAPP_URL){
+    return fetch(CONFIG.WEBAPP_URL, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // text/plain = no CORS pre-flight
+      body: JSON.stringify({ method: method, payload: payload || {} })
+    }).then(function(r){ return r.json(); });
+  }
+  if (hasGAS()){
+    return new Promise(function(resolve, reject){
+      google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[method](payload);
+    });
+  }
+  return new Promise(function(resolve, reject){
+    setTimeout(function(){
+      try { resolve(Mock[method] ? Mock[method](payload || {}) : { ok:false, error:'Preview: '+method+' unavailable' }); }
+      catch(e){ reject(e); }
+    }, 120);
+  });
+}
+
+/* =====================  Helpers  ===================== */
+function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+function parseMoney(s){ return Number(String(s==null?'':s).replace(/[^0-9.]/g,'')) || 0; }
+function currency(n){ return '$' + (Math.round(n*100)/100).toFixed(2); }
+function fmtISO(d){ var m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0'); return d.getFullYear()+'-'+m+'-'+day; }
+function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function todayLocal(){ var t=new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+function parseISO(s){ var p=String(s).split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+function isEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e||'')); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function effVar(cake, i){
+  var v = (cake.variations && cake.variations[i]) ? cake.variations[i] : {};
+  return {
+    img: v.img || cake.img,
+    name: v.name || cake.name, nameRu: v.nameRu || cake.nameRu,
+    desc: v.desc || cake.desc, descRu: v.descRu || cake.descRu,
+    ingr: v.ingr || cake.ingr, ingrRu: v.ingrRu || cake.ingrRu,
+    size: v.size !== undefined ? v.size : cake.size, sizeRu: v.sizeRu !== undefined ? v.sizeRu : cake.sizeRu,
+    serves: v.serves || cake.serves, servesRu: v.servesRu || cake.servesRu,
+    price: v.price || cake.price,
+    id: v.id || slug(cake.name)
+  };
+}
+
+/* =====================  Page navigation  ===================== */
+var currentPage = 'home';
+function showPage(page){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var el = document.getElementById('page-'+page);
+  if (!el){ page='home'; el = document.getElementById('page-home'); }
+  el.classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(function(a){ a.classList.remove('active'); });
+  var navEl = document.getElementById('nav-'+page); if (navEl) navEl.classList.add('active');
+  currentPage = page; window.scrollTo(0,0);
+  if (page==='gallery') renderGallery();
+  if (page==='reviews') renderReviews();
+  if (page==='order'){ renderCart(); prefillCheckout(); updateOrderGate(); initDatePicker(); }
+  if (page==='account') updateAuthUI();
+}
+function toggleMobileNav(){ document.getElementById('mobileNav').classList.toggle('open'); }
+function closeMobileNav(){ document.getElementById('mobileNav').classList.remove('open'); }
+window.addEventListener('scroll', function(){
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+/* =====================  RIBBON  ===================== */
+var ribbonAutoPlay = true, ribbonPos = 0, ribbonDragging = false, ribbonDragStart = 0,
+    ribbonDragStartPos = 0, ribbonVelocity = 0, ribbonLastX = 0, ribbonRAF = null, ribbonModalOpen = false;
+var CARD_WIDTH = 220, RIBBON_SPEED = 0.6;
+
+function ribbonCardHTML(cake){
+  return '<div class="cake-card" onclick="openCakeModal('+cake.id+')">' +
+    '<div class="cake-thumb"><img src="'+cake.img+'" alt="'+esc(L(cake,"name"))+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="cake-thumb-overlay"></div></div>' +
+    '<div class="cake-card-body"><div class="cake-name">'+esc(L(cake,"name"))+'</div>' +
+    '<div class="cake-desc-short">'+esc(L(cake,"tag"))+'</div>' +
+    '<div class="cake-view-btn">'+esc(t("ribbon.viewDetails"))+
+    ' <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div></div></div>';
+}
+function renderRibbonCards(){
+  var track = document.getElementById('ribbonTrack');
+  if (!track) return;
+  var all = CAKES.concat(CAKES, CAKES);
+  track.innerHTML = all.map(ribbonCardHTML).join('');
+}
+function applyRibbonPos(){
+  var track = document.getElementById('ribbonTrack'); if (!track) return;
+  var totalW = CAKES.length * CARD_WIDTH;
+  if (ribbonPos >= totalW*2) ribbonPos -= totalW;
+  if (ribbonPos < totalW) ribbonPos += totalW;
+  track.style.transform = 'translateX(-'+ribbonPos+'px)';
+}
+function startRibbonAnim(){
+  cancelAnimationFrame(ribbonRAF);
+  (function tick(){
+    if (!ribbonDragging && ribbonAutoPlay && !ribbonModalOpen){ ribbonPos += RIBBON_SPEED; applyRibbonPos(); }
+    else if (!ribbonDragging && ribbonVelocity !== 0){
+      ribbonPos += ribbonVelocity; ribbonVelocity *= 0.92;
+      if (Math.abs(ribbonVelocity) < 0.05) ribbonVelocity = 0;
+      applyRibbonPos();
+    }
+    ribbonRAF = requestAnimationFrame(tick);
+  })();
+}
+function setupRibbonDrag(){
+  var track = document.getElementById('ribbonTrack');
+  var down = function(x){ ribbonDragging=true; ribbonDragStart=x; ribbonDragStartPos=ribbonPos; ribbonVelocity=0; ribbonLastX=x; track.style.cursor='grabbing'; };
+  var move = function(x){ if(!ribbonDragging) return; var dx=x-ribbonDragStart; ribbonVelocity=ribbonLastX-x; ribbonLastX=x; ribbonPos=ribbonDragStartPos - dx; applyRibbonPos(); };
+  var up = function(){ ribbonDragging=false; track.style.cursor='grab'; };
+  track.addEventListener('mousedown', function(e){ down(e.clientX); });
+  window.addEventListener('mousemove', function(e){ move(e.clientX); });
+  window.addEventListener('mouseup', up);
+  track.addEventListener('touchstart', function(e){ down(e.touches[0].clientX); }, {passive:true});
+  track.addEventListener('touchmove', function(e){ move(e.touches[0].clientX); }, {passive:true});
+  track.addEventListener('touchend', up);
+}
+function buildRibbon(){
+  renderRibbonCards();
+  ribbonPos = CAKES.length * CARD_WIDTH;
+  applyRibbonPos(); startRibbonAnim(); setupRibbonDrag();
+}
+
+/* =====================  CAKE MODAL (with design variations)  ===================== */
+var modalCake = null, modalVarIndex = 0;
+function openCakeModal(id){
+  modalCake = CAKES[id]; modalVarIndex = 0;
+  if (!modalCake) return;
+  buildVarDots();
+  showVariation();
+  document.getElementById('cakeModalOverlay').classList.add('open');
+  ribbonModalOpen = true; document.body.style.overflow = 'hidden';
+}
+function buildVarDots(){
+  var host = document.getElementById('cakeModalVarDots');
+  var n = (modalCake.variations || [modalCake]).length;
+  if (n <= 1){ host.innerHTML = ''; return; }
+  var html = '';
+  for (var i=0;i<n;i++) html += '<span class="modal-var-dot'+(i===modalVarIndex?' active':'')+'" onclick="gotoVariation('+i+')"></span>';
+  host.innerHTML = html;
+}
+function showVariation(){
+  var list = modalCake.variations && modalCake.variations.length ? modalCake.variations : [modalCake];
+  var v = effVar(modalCake, modalVarIndex);
+  document.getElementById('cakeModalEmoji').innerHTML = '<img src="'+v.img+'" alt="'+esc(L(v,"name"))+'" style="width:100%;height:auto;display:block;">';
+  document.getElementById('cakeModalHero').style.background = 'none';
+  document.getElementById('cakeModalTitle').textContent = L(v,'name');
+  document.getElementById('cakeModalTag').textContent = L(modalCake,'tag');
+  document.getElementById('cakeModalDesc').textContent = L(v,'desc');
+  document.getElementById('cakeModalIngredients').textContent = L(v,'ingr');
+  var sizeVal = L(v,'size');
+  document.getElementById('cakeModalSizeRow').style.display = sizeVal ? '' : 'none';
+  document.getElementById('cakeModalSize').textContent = sizeVal || '—';
+  document.getElementById('cakeModalServes').textContent = L(v,'serves') || '—';
+  document.getElementById('cakeModalCat').textContent = t('cat.'+modalCake.category);
+  document.getElementById('cakeModalPrice').textContent = v.price;
+  document.getElementById('addToCartBtn').textContent = t('modal.addToCart');
+  var counter = document.getElementById('cakeModalVarCounter');
+  counter.textContent = list.length > 1 ? t('modal.design', {n: modalVarIndex+1, total: list.length}) : '';
+  document.querySelectorAll('#cakeModalVarDots .modal-var-dot').forEach(function(d,i){ d.classList.toggle('active', i===modalVarIndex); });
+}
+function modalNav(dir){
+  var list = modalCake.variations && modalCake.variations.length ? modalCake.variations : [modalCake];
+  modalVarIndex = (modalVarIndex + dir + list.length) % list.length;
+  showVariation();
+}
+function gotoVariation(i){ modalVarIndex = i; showVariation(); }
+function addToCartFromModal(){
+  addToCart(modalCake.id, modalVarIndex);
+  var f = document.getElementById('addedFlash');
+  f.textContent = t('modal.added'); f.classList.add('show');
+  setTimeout(function(){ f.classList.remove('show'); }, 1400);
+}
+function closeCakeModal(e){ if (e.target === document.getElementById('cakeModalOverlay')) closeCakeModalDirect(); }
+function closeCakeModalDirect(){
+  document.getElementById('cakeModalOverlay').classList.remove('open');
+  ribbonModalOpen = false; document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){
+  if (!ribbonModalOpen) return;
+  if (e.key==='ArrowLeft') modalNav(-1);
+  if (e.key==='ArrowRight') modalNav(1);
+  if (e.key==='Escape') closeCakeModalDirect();
+});
+
+/* =====================  GALLERY  ===================== */
+var activeFilter = 'All';
+function categories(){ var set=['All']; CAKES.forEach(function(c){ if(set.indexOf(c.category)<0) set.push(c.category); }); return set; }
+function renderGallery(){
+  var bar = document.getElementById('galleryFilter'), grid = document.getElementById('galleryGrid');
+  bar.innerHTML = categories().map(function(cat){
+    return '<button class="filter-btn'+(cat===activeFilter?' active':'')+'" onclick="setFilter(\''+cat+'\')">'+esc(t('cat.'+cat))+'</button>';
+  }).join('');
+  var list = activeFilter==='All' ? CAKES : CAKES.filter(function(c){ return c.category===activeFilter; });
+  grid.innerHTML = list.map(function(cake){
+    return '<div class="gallery-item" onclick="openCakeModal('+cake.id+')">' +
+      '<img src="'+cake.img+'" alt="'+esc(L(cake,"name"))+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:block;">' +
+      '<div class="gallery-overlay"><div class="gallery-item-name">'+esc(L(cake,"name"))+'</div></div></div>';
+  }).join('');
+}
+function setFilter(cat){ activeFilter = cat; renderGallery(); }
+
+/* =====================  CART  ===================== */
+function getCart(){ try { return JSON.parse(localStorage.getItem('sm_cart')||'[]'); } catch(e){ return []; } }
+function setCart(c){ localStorage.setItem('sm_cart', JSON.stringify(c)); updateCartCount(); }
+function addToCart(cakeId, varIndex){
+  var cake = CAKES[cakeId]; var v = effVar(cake, varIndex);
+  var cart = getCart();
+  var item = { id:v.id, nameEn:(cake.variations&&cake.variations[varIndex]&&cake.variations[varIndex].name)||cake.name,
+               nameRu:(cake.variations&&cake.variations[varIndex]&&cake.variations[varIndex].nameRu)||cake.nameRu,
+               price: parseMoney(v.price), qty:1 };
+  var idx = cart.findIndex(function(x){ return x.id===item.id; });
+  if (idx>=0) cart[idx].qty++; else cart.push(item);
+  setCart(cart); renderCart();
+}
+function cartName(item){ return (LANG==='ru' && item.nameRu) ? item.nameRu : item.nameEn; }
+function updateCartCount(){
+  var n = getCart().reduce(function(s,i){ return s + (i.qty||1); }, 0);
+  var el = document.getElementById('cartCount'); if (!el) return;
+  el.textContent = n; el.classList.toggle('empty', n===0);
+}
+function cartTotal(){ return getCart().reduce(function(s,i){ return s + i.price*i.qty; }, 0); }
+function renderCart(){
+  var host = document.getElementById('cartRows'); if (!host) return;
+  var cart = getCart();
+  if (!cart.length){ host.innerHTML = '<div class="cart-empty">'+esc(t('msg.cartEmpty'))+'</div>'; }
+  else {
+    host.innerHTML = cart.map(function(item, idx){
+      return '<div class="cart-row">' +
+        '<div class="ci-name">'+esc(cartName(item))+'</div>' +
+        '<div>'+currency(item.price)+'</div>' +
+        '<div><input type="number" min="1" value="'+item.qty+'" onchange="changeQty('+idx+', this.value)"></div>' +
+        '<div>'+currency(item.price*item.qty)+'</div>' +
+        '<button class="cart-remove" onclick="removeItem('+idx+')" aria-label="Remove">&times;</button></div>';
+    }).join('');
+  }
+  var totalEl = document.getElementById('cartTotal'); if (totalEl) totalEl.textContent = currency(cartTotal());
+  updatePayInstructions();
+}
+function changeQty(idx, val){ var cart=getCart(); cart[idx].qty=Math.max(1, parseInt(val,10)||1); setCart(cart); renderCart(); }
+function removeItem(idx){ var cart=getCart(); cart.splice(idx,1); setCart(cart); renderCart(); }
+function clearCart(){
+  setCart([]); renderCart();
+  localStorage.removeItem('sm_orderDate');
+  var od=document.getElementById('orderDate'); if(od) od.value='';
+  setMsg('clearStatus', t('msg.cartCleared'), 'success'); initDatePicker();
+}
+
+/* =====================  ORDER DATE + PAYMENT  ===================== */
+var blockedDates = [];
+function setMsg(id, text, type){ var el=document.getElementById(id); if(!el) return; el.textContent=text||''; el.className='checkout-msg'+(type?(' '+type):''); }
+function localMinDate(){ return addDays(todayLocal(), CONFIG.BLOCK_BEFORE_DAYS); }
+function initDatePicker(){
+  var input = document.getElementById('orderDate'); if (!input) return;
+  var localMin = localMinDate();
+  input.min = fmtISO(localMin);
+  var saved = localStorage.getItem('sm_orderDate');
+  if (saved){ input.value = saved; setMsg('dateStatus', t('msg.dateSet',{date:saved}), 'muted'); }
+  else setMsg('dateStatus', t('msg.dateEarliest',{date:fmtISO(localMin)}), 'muted');
+  api('getGlobalMinDate').then(function(serverMinStr){
+    var serverMin = serverMinStr ? parseISO(serverMinStr) : null;
+    var eff = (serverMin && serverMin > localMin) ? serverMin : localMin;
+    input.min = fmtISO(eff);
+    if (!localStorage.getItem('sm_orderDate')) setMsg('dateStatus', t('msg.dateEarliest',{date:fmtISO(eff)}), 'muted');
+  }).catch(function(){});
+  api('getBlockedDates').then(function(b){ blockedDates = b || []; }).catch(function(){ blockedDates=[]; });
+}
+function onOrderDateChange(){
+  var input = document.getElementById('orderDate'); var val = input.value;
+  if (!val){ setMsg('dateStatus', t('msg.chooseDate'), 'error'); return; }
+  if (parseISO(val) < parseISO(input.min)){ input.value=''; localStorage.removeItem('sm_orderDate'); setMsg('dateStatus', t('msg.dateInvalid',{date:input.min}), 'error'); return; }
+  if (blockedDates.indexOf(val) >= 0){ input.value=''; localStorage.removeItem('sm_orderDate'); setMsg('dateStatus', t('msg.dateUnavailable'), 'error'); return; }
+  api('checkDateAvailability', {date: val}).then(function(d){
+    if (d && d.available){ localStorage.setItem('sm_orderDate', val); setMsg('dateStatus', t('msg.dateSet',{date:val}), 'muted'); }
+    else { input.value=''; localStorage.removeItem('sm_orderDate'); setMsg('dateStatus', (d&&d.message)||t('msg.dateUnavailable'), 'error'); }
+  }).catch(function(){ localStorage.setItem('sm_orderDate', val); setMsg('dateStatus', t('msg.dateSet',{date:val}), 'muted'); });
+}
+var selectedPayment = null;
+function selectPayment(card){
+  document.querySelectorAll('#payMethods .pay-card').forEach(function(c){ c.classList.remove('selected'); });
+  card.classList.add('selected'); selectedPayment = card.getAttribute('data-method');
+  updatePayInstructions();
+}
+function updatePayInstructions(){
+  var box = document.getElementById('payInstructions'); if (!box) return;
+  if (!selectedPayment){ box.classList.remove('show'); box.textContent=''; return; }
+  var total = currency(cartTotal()); var handle = CONFIG.PAYMENT_HANDLES[selectedPayment] || '';
+  box.textContent = t('payPrev.'+selectedPayment, { total: total, handle: handle });
+  box.classList.add('show');
+}
+function prefillCheckout(){
+  if (!currentUser) return;
+  ['custName','custEmail','custPhone'].forEach(function(id){ var el=document.getElementById(id); if(el && !el.value){
+    el.value = id==='custName'?(currentUser.name||''): id==='custEmail'?(currentUser.email||''):(currentUser.phone||'');
+  }});
+}
+function updateOrderGate(){
+  var gate = document.getElementById('orderLoginGate');
+  if (gate) gate.style.display = currentUser ? 'none' : 'block';
+}
+
+/* =====================  PLACE ORDER  ===================== */
+function placeOrder(){
+  setMsg('orderStatus','','');
+  var cart = getCart();
+  if (!cart.length){ setMsg('orderStatus', t('msg.cartEmpty'), 'error'); return; }
+  if (!currentUser){ setMsg('orderStatus', t('msg.loginToOrder'), 'error'); showPage('account'); return; }
+  var date = localStorage.getItem('sm_orderDate');
+  if (!date){ setMsg('dateStatus', t('msg.chooseDate'), 'error'); return; }
+  var name = (document.getElementById('custName').value||'').trim();
+  var email = (document.getElementById('custEmail').value||'').trim();
+  var phone = (document.getElementById('custPhone').value||'').trim();
+  if (!name || !isEmail(email) || phone.length < 7){ setMsg('orderStatus', t('msg.fixContact'), 'error'); return; }
+  if (!selectedPayment){ setMsg('orderStatus', t('msg.choosePay'), 'error'); return; }
+
+  var writing = (document.getElementById('custWriting').value||'').trim();
+  var total = cartTotal();
+  var orderId = 'BK-' + Date.now();
+  var order = {
+    id: orderId, date: date, token: localStorage.getItem('sm_token')||'',
+    customer: { name:name, email:email, phone:phone },
+    payment: { method: selectedPayment },
+    items: cart.map(function(i){ return { name:i.nameEn, price:i.price, quantity:i.qty }; }),
+    total: total, writing: writing, source:'IndexM',
+    notes: 'Offline payment via ' + selectedPayment
+  };
+  var btn = document.getElementById('placeOrderBtn'); btn.disabled = true;
+  setMsg('orderStatus', t('msg.processing'), 'muted');
+
+  api('saveOrder', order).then(function(res){
+    btn.disabled = false;
+    if (!res || !res.ok){ setMsg('orderStatus', (res&&res.error)||t('common.loadError'), 'error'); return; }
+    var handle = CONFIG.PAYMENT_HANDLES[selectedPayment] || '';
+    var totalStr = currency(total);
+    var payNote = (selectedPayment==='cash')
+      ? t('pay.cashNote')
+      : t('pay.'+selectedPayment+'Note', { total: totalStr, handle: handle, id: orderId });
+    var msg = t('msg.orderSuccess', { id:orderId, date:date, total:totalStr, payNote:payNote, address: (res.pickupAddress||CONFIG.PICKUP_ADDRESS) });
+    setCart([]); renderCart();
+    localStorage.removeItem('sm_orderDate'); document.getElementById('orderDate').value='';
+    document.querySelectorAll('#payMethods .pay-card').forEach(function(c){ c.classList.remove('selected'); });
+    selectedPayment = null; updatePayInstructions();
+    setMsg('orderStatus', msg, 'success');
+    initDatePicker();
+  }).catch(function(){ btn.disabled=false; setMsg('orderStatus', t('common.loadError'), 'error'); });
+}
+
+/* =====================  REVIEWS  ===================== */
+var selectedStars = 0;
+function reviewCardHTML(r){
+  return '<div class="review-card"><div class="review-quote">"</div>' +
+    '<div class="review-stars">'+'★'.repeat(r.stars)+'</div>' +
+    '<p class="review-text">'+esc(r.text)+'</p>' +
+    '<div class="review-author"><div class="review-avatar">'+(r.emoji||'🎂')+'</div>' +
+    '<div><div class="review-name">'+esc(r.name)+'</div><div class="review-date">'+esc(r.date||'')+'</div></div></div></div>';
+}
+function renderReviews(){
+  var grid = document.getElementById('reviewsGrid'); if (!grid) return;
+  var seed = SEED_REVIEWS.map(function(r){ return { name:r.name, stars:r.stars, emoji:r.emoji, date:r.date, text:(LANG==='ru'&&r.textRu)?r.textRu:r.text }; });
+  grid.innerHTML = seed.map(reviewCardHTML).join('');
+  api('getApprovedReviews').then(function(res){
+    if (res && res.ok && res.reviews && res.reviews.length){
+      grid.innerHTML = res.reviews.map(reviewCardHTML).join('') + seed.map(reviewCardHTML).join('');
+    }
+  }).catch(function(){});
+  // star picker
+  document.querySelectorAll('#starSelect .star-btn').forEach(function(btn){
+    btn.onclick = function(){
+      selectedStars = parseInt(btn.dataset.star,10);
+      document.querySelectorAll('#starSelect .star-btn').forEach(function(b,i){ b.classList.toggle('active', i<selectedStars); });
+    };
+  });
+}
+function submitReview(){
+  var name = (document.getElementById('reviewName').value||'').trim();
+  var text = (document.getElementById('reviewText').value||'').trim();
+  if (!name || !text || !selectedStars){ setMsg('reviewStatus', t('rev.fill'), 'error'); return; }
+  api('submitReview', { token: localStorage.getItem('sm_token')||'', name:name, stars:selectedStars, text:text }).then(function(res){
+    setMsg('reviewStatus', (res&&res.ok)? t('rev.submitted') : ((res&&res.error)||t('common.loadError')), (res&&res.ok)?'success':'error');
+    if (res&&res.ok){
+      document.getElementById('reviewName').value=''; document.getElementById('reviewText').value='';
+      selectedStars=0; document.querySelectorAll('#starSelect .star-btn').forEach(function(b){ b.classList.remove('active'); });
+    }
+  }).catch(function(){ setMsg('reviewStatus', t('common.loadError'), 'error'); });
+}
+
+/* =====================  CONTACT  ===================== */
+function submitContact(){
+  var name=(document.getElementById('contactName').value||'').trim();
+  var email=(document.getElementById('contactEmail').value||'').trim();
+  var subject=document.getElementById('contactSubject').value;
+  var message=(document.getElementById('contactMessage').value||'').trim();
+  if (!name || !isEmail(email) || !message){ setMsg('contactStatus', t('contact.fill'), 'error'); return; }
+  api('submitContact', { name:name, email:email, subject:subject, message:message }).then(function(res){
+    setMsg('contactStatus', (res&&res.ok)? t('contact.sent') : ((res&&res.error)||t('common.loadError')), (res&&res.ok)?'success':'error');
+    if (res&&res.ok){ document.getElementById('contactName').value=''; document.getElementById('contactEmail').value=''; document.getElementById('contactMessage').value=''; }
+  }).catch(function(){ setMsg('contactStatus', t('common.loadError'), 'error'); });
+}
+
+/* =====================  ACCOUNTS / AUTH  ===================== */
+var currentUser = null;
+function switchAuthTab(which){
+  ['login','signup','forgot'].forEach(function(p){
+    var pane=document.getElementById('pane'+p.charAt(0).toUpperCase()+p.slice(1));
+    if (pane) pane.classList.toggle('active', p===which);
+  });
+  document.getElementById('tabLogin').classList.toggle('active', which==='login');
+  document.getElementById('tabSignup').classList.toggle('active', which==='signup');
+}
+function setSession(token, user){
+  if (token) localStorage.setItem('sm_token', token);
+  currentUser = user; updateAuthUI(); updateOrderGate(); prefillCheckout();
+}
+function restoreSession(){
+  var token = localStorage.getItem('sm_token'); if (!token){ updateAuthUI(); return; }
+  api('getUserByToken', {token:token}).then(function(res){
+    if (res && res.ok){ currentUser = res.user; } else { localStorage.removeItem('sm_token'); currentUser=null; }
+    updateAuthUI(); updateOrderGate(); prefillCheckout();
+  }).catch(function(){ updateAuthUI(); });
+}
+function updateAuthUI(){
+  var authView=document.getElementById('authView'), dashView=document.getElementById('dashView');
+  if (!authView) return;
+  if (currentUser){
+    authView.style.display='none'; dashView.style.display='block';
+    document.getElementById('dashName').textContent = currentUser.name || currentUser.email;
+    var pn=document.getElementById('profName'), pp=document.getElementById('profPhone'), pe=document.getElementById('profEmail');
+    if (pn) pn.value=currentUser.name||''; if (pp) pp.value=currentUser.phone||''; if (pe) pe.value=currentUser.email||'';
+    var admin = (currentUser.role==='admin');
+    document.getElementById('adminPanel').style.display = admin ? 'block':'none';
+    loadOrderHistory(); if (admin) loadAdmin();
+  } else {
+    authView.style.display='block'; dashView.style.display='none';
+  }
+}
+function doSignup(){
+  var name=(document.getElementById('signupName').value||'').trim();
+  var email=(document.getElementById('signupEmail').value||'').trim();
+  var phone=(document.getElementById('signupPhone').value||'').trim();
+  var pass=document.getElementById('signupPassword').value||'';
+  if (!name || !isEmail(email) || pass.length<6){ setMsg('signupMsg', t('auth.fillSignup'), 'error'); return; }
+  api('signUp', {name:name, email:email, phone:phone, password:pass}).then(function(res){
+    if (res && res.ok){ setMsg('signupMsg', t('auth.created'), 'success'); setSession(res.token, res.user); }
+    else setMsg('signupMsg', (res&&res.error)||t('common.loadError'), 'error');
+  }).catch(function(){ setMsg('signupMsg', t('common.loadError'), 'error'); });
+}
+function doLogin(){
+  var email=(document.getElementById('loginEmail').value||'').trim();
+  var pass=document.getElementById('loginPassword').value||'';
+  if (!email || !pass){ setMsg('loginMsg', t('auth.fillLogin'), 'error'); return; }
+  api('logIn', {email:email, password:pass}).then(function(res){
+    if (res && res.ok){ setMsg('loginMsg', t('auth.loggedIn'), 'success'); setSession(res.token, res.user); }
+    else setMsg('loginMsg', (res&&res.error)||t('common.loadError'), 'error');
+  }).catch(function(){ setMsg('loginMsg', t('common.loadError'), 'error'); });
+}
+function doLogout(){
+  api('logOut', {token: localStorage.getItem('sm_token')||''}).catch(function(){});
+  localStorage.removeItem('sm_token'); currentUser=null; updateAuthUI(); updateOrderGate();
+  switchAuthTab('login'); setMsg('loginMsg', t('auth.signedOut'), 'success');
+}
+function saveProfile(){
+  var name=(document.getElementById('profName').value||'').trim();
+  var phone=(document.getElementById('profPhone').value||'').trim();
+  api('updateProfile', {token: localStorage.getItem('sm_token')||'', name:name, phone:phone}).then(function(res){
+    if (res && res.ok){ currentUser=res.user; setMsg('profileMsg', t('auth.profileSaved'), 'success'); prefillCheckout(); }
+    else setMsg('profileMsg', (res&&res.error)||t('common.loadError'), 'error');
+  }).catch(function(){ setMsg('profileMsg', t('common.loadError'), 'error'); });
+}
+function doRequestReset(){
+  var email=(document.getElementById('forgotEmail').value||'').trim();
+  if (!isEmail(email)){ setMsg('forgotMsg', t('auth.enterEmail'), 'error'); return; }
+  api('requestPasswordReset', {email:email}).then(function(res){
+    setMsg('forgotMsg', (res&&res.message)|| t('auth.codeSent'), 'success');
+    document.getElementById('forgotResetFields').style.display='block';
+  }).catch(function(){ setMsg('forgotMsg', t('common.loadError'), 'error'); });
+}
+function doResetPassword(){
+  var email=(document.getElementById('forgotEmail').value||'').trim();
+  var code=(document.getElementById('resetCode').value||'').trim();
+  var pass=document.getElementById('resetNewPassword').value||'';
+  if (!code || pass.length<6){ setMsg('forgotMsg', t('auth.fillReset'), 'error'); return; }
+  api('resetPasswordWithCode', {email:email, code:code, newPassword:pass}).then(function(res){
+    if (res && res.ok){ setMsg('forgotMsg', t('auth.resetOk'), 'success'); switchAuthTab('login'); }
+    else setMsg('forgotMsg', (res&&res.error)||t('common.loadError'), 'error');
+  }).catch(function(){ setMsg('forgotMsg', t('common.loadError'), 'error'); });
+}
+
+/* =====================  ORDER HISTORY  ===================== */
+function loadOrderHistory(){
+  var host=document.getElementById('orderHistory'); if (!host) return;
+  host.innerHTML = '<p class="muted-note">'+esc(t('account.loadingOrders'))+'</p>';
+  api('getOrderHistory', {token: localStorage.getItem('sm_token')||''}).then(function(res){
+    if (!res || !res.ok || !res.orders || !res.orders.length){ host.innerHTML='<p class="muted-note">'+esc(t('account.noOrders'))+'</p>'; return; }
+    host.innerHTML = res.orders.map(function(o){
+      var items = (o.items||[]).map(function(i){ return esc(i.name)+' ×'+(i.quantity||i.qty||1); }).join(', ');
+      return '<div class="order-hist-item"><div class="ohi-top"><span class="ohi-id">'+esc(o.id)+'</span>' +
+        '<span class="ohi-status">'+esc(o.status||'received')+'</span></div>' +
+        '<div class="ohi-meta">'+esc(o.date)+' · '+currency(parseMoney(o.total))+'</div>' +
+        '<div class="ohi-items">'+items+'</div>'+(o.writing?'<div class="ohi-meta">“'+esc(o.writing)+'”</div>':'')+'</div>';
+    }).join('');
+  }).catch(function(){ host.innerHTML='<p class="muted-note">'+esc(t('common.loadError'))+'</p>'; });
+}
+
+/* =====================  ADMIN  ===================== */
+function loadAdmin(){
+  var token=localStorage.getItem('sm_token')||'';
+  var pend=document.getElementById('pendingReviews');
+  api('getPendingReviews', {token:token}).then(function(res){
+    if (!res || !res.ok || !res.reviews || !res.reviews.length){ pend.innerHTML='<p class="muted-note">'+esc(t('admin.noPending'))+'</p>'; return; }
+    pend.innerHTML = res.reviews.map(function(r){
+      return '<div class="admin-review"><div class="review-stars" style="color:var(--gold)">'+'★'.repeat(r.stars)+'</div>' +
+        '<div class="ohi-meta"><b>'+esc(r.name)+'</b> · '+esc(r.date||'')+'</div>' +
+        '<div class="ar-text">'+esc(r.text)+'</div><div class="admin-actions">' +
+        '<button class="btn-approve" onclick="moderate(\''+r.id+'\',\'approve\')">'+esc(t('admin.approve'))+'</button>' +
+        '<button class="btn-reject" onclick="moderate(\''+r.id+'\',\'reject\')">'+esc(t('admin.reject'))+'</button></div></div>';
+    }).join('');
+  }).catch(function(){ pend.innerHTML='<p class="muted-note">'+esc(t('common.loadError'))+'</p>'; });
+
+  var users=document.getElementById('adminUsers');
+  api('adminListUsers', {token:token}).then(function(res){
+    if (!res || !res.ok){ users.innerHTML='<p class="muted-note">'+esc(t('common.loadError'))+'</p>'; return; }
+    users.innerHTML = res.users.map(function(u){
+      return '<div class="admin-user-row"><div><b>'+esc(u.name||'—')+'</b><br><span class="muted-note">'+esc(u.email)+'</span></div>' +
+        '<div class="muted-note">'+esc(u.role)+'</div>' +
+        '<button class="small-btn" onclick="fillAdminEmail(\''+esc(u.email)+'\')">'+esc(t('admin.help'))+'</button></div>';
+    }).join('');
+  }).catch(function(){ users.innerHTML='<p class="muted-note">'+esc(t('common.loadError'))+'</p>'; });
+}
+function fillAdminEmail(email){ document.getElementById('adminCustEmail').value=email; }
+function moderate(id, action){
+  api('moderateReview', {token: localStorage.getItem('sm_token')||'', id:id, action:action}).then(function(res){
+    loadAdmin(); if (action==='approve') renderReviews();
+  }).catch(function(){});
+}
+function adminSetPass(){
+  var email=(document.getElementById('adminCustEmail').value||'').trim();
+  var pass=(document.getElementById('adminNewPass').value||'').trim();
+  if (!isEmail(email) || pass.length<6){ setMsg('adminHelpMsg', t('admin.fillUser'), 'error'); return; }
+  api('adminSetPassword', {token: localStorage.getItem('sm_token')||'', email:email, newPassword:pass}).then(function(res){
+    setMsg('adminHelpMsg', (res&&res.ok)?(res.message||'OK'):((res&&res.error)||t('common.loadError')), (res&&res.ok)?'success':'error');
+  }).catch(function(){ setMsg('adminHelpMsg', t('common.loadError'), 'error'); });
+}
+function adminForceLogoutUser(){
+  var email=(document.getElementById('adminCustEmail').value||'').trim();
+  if (!isEmail(email)){ setMsg('adminHelpMsg', t('admin.fillUser'), 'error'); return; }
+  api('adminForceLogout', {token: localStorage.getItem('sm_token')||'', email:email}).then(function(res){
+    setMsg('adminHelpMsg', (res&&res.ok)?(res.message||'OK'):((res&&res.error)||t('common.loadError')), (res&&res.ok)?'success':'error');
+  }).catch(function(){ setMsg('adminHelpMsg', t('common.loadError'), 'error'); });
+}
+
+/* =====================  PROMO SPARKLES  ===================== */
+function generateSparkles(){
+  var host=document.getElementById('promoSparkles'); if (!host) return;
+  var html='';
+  for (var i=0;i<18;i++){
+    var x=Math.random()*100, tx=(Math.random()-0.5)*60, ty=-(30+Math.random()*60),
+        dur=(2.8+Math.random()*3.2).toFixed(2), delay=(Math.random()*5).toFixed(2), sz=(2+Math.random()*3).toFixed(1);
+    html += '<span class="promo-spark" style="left:'+x+'%;bottom:'+(Math.random()*40)+'%;--tx:'+tx+'px;--ty:'+ty+'px;--dur:'+dur+'s;--delay:'+delay+'s;width:'+sz+'px;height:'+sz+'px;"></span>';
+  }
+  host.innerHTML = html;
+}
+
+/* =====================  re-render on language switch  ===================== */
+function rerenderDynamic(){
+  renderRibbonCards();
+  if (currentPage==='gallery') renderGallery();
+  renderReviews();
+  renderCart();
+  if (document.getElementById('cakeModalOverlay').classList.contains('open')) showVariation();
+  if (currentUser && currentPage==='account'){ loadOrderHistory(); if (currentUser.role==='admin') loadAdmin(); }
+}
+
+/* =====================  RIBBON CONTROLS + INIT  ===================== */
+function initStaticListeners(){
+  document.getElementById('ribbonLeft').addEventListener('click', function(){ ribbonVelocity=0; ribbonPos-=CARD_WIDTH; applyRibbonPos(); });
+  document.getElementById('ribbonRight').addEventListener('click', function(){ ribbonVelocity=0; ribbonPos+=CARD_WIDTH; applyRibbonPos(); });
+  var playBtn=document.getElementById('ribbonPlayBtn'), playIcon=document.getElementById('ribbonPlayIcon');
+  playBtn.addEventListener('click', function(){
+    ribbonAutoPlay=!ribbonAutoPlay;
+    playIcon.innerHTML = ribbonAutoPlay ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+  });
+  document.querySelectorAll('#payMethods .pay-card').forEach(function(card){ card.addEventListener('click', function(){ selectPayment(card); }); });
+  var od=document.getElementById('orderDate'); if (od) od.addEventListener('change', onOrderDateChange);
+  // modal swipe
+  var img=document.getElementById('cakeModalEmoji'); var sx=0;
+  img.addEventListener('touchstart', function(e){ sx=e.changedTouches[0].clientX; }, {passive:true});
+  img.addEventListener('touchend', function(e){ var dx=e.changedTouches[0].clientX-sx; if (Math.abs(dx)>40) modalNav(dx<0?1:-1); }, {passive:true});
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('cakeModalOverlay').classList.remove('open');
+  initStaticListeners();
+  buildRibbon();
+  generateSparkles();
+  applyI18n();
+  updateCartCount();
+  renderReviews();
+  restoreSession();
+  var nh=document.getElementById('nav-home'); if (nh) nh.classList.add('active');
+});
+
+/* =====================  OFFLINE PREVIEW MOCK (localStorage)  =====================
+   Used ONLY when the page is opened outside Google Apps Script, so you can test
+   the whole flow. In production (Apps Script) the real Code.gs runs instead. */
+var Mock = (function(){
+  function get(k){ try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e){ return []; } }
+  function set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+  function token(){ return 'mock-'+Math.random().toString(36).slice(2)+Date.now(); }
+  function findUser(email){ return get('sm_users').find(function(u){ return u.email.toLowerCase()===String(email||'').toLowerCase(); }); }
+  function userByToken(tok){ return get('sm_users').find(function(u){ return u.token===tok; }); }
+  function pub(u){ return u ? { email:u.email, name:u.name, phone:u.phone, role:u.role } : null; }
+  function role(email){ return email.toLowerCase()===CONFIG.ADMIN_EMAIL.toLowerCase() ? 'admin':'customer'; }
+  return {
+    signUp:function(p){ if(findUser(p.email)) return {ok:false,error:'An account with that email already exists.'};
+      if(String(p.password||'').length<6) return {ok:false,error:'Password must be at least 6 characters.'};
+      var users=get('sm_users'); var u={email:p.email,name:p.name,phone:p.phone||'',pass:btoa(p.password),role:role(p.email),token:token()};
+      users.push(u); set('sm_users',users); return {ok:true,token:u.token,user:pub(u)}; },
+    logIn:function(p){ var u=findUser(p.email); if(!u) return {ok:false,error:'No account found with that email.'};
+      if(u.pass!==btoa(p.password||'')) return {ok:false,error:'Incorrect password.'}; u.token=token();
+      var users=get('sm_users').map(function(x){return x.email===u.email?u:x;}); set('sm_users',users); return {ok:true,token:u.token,user:pub(u)}; },
+    getUserByToken:function(p){ var u=userByToken(p.token); return u?{ok:true,user:pub(u)}:{ok:false}; },
+    logOut:function(p){ var users=get('sm_users').map(function(u){ if(u.token===p.token) u.token=''; return u; }); set('sm_users',users); return {ok:true}; },
+    updateProfile:function(p){ var u=userByToken(p.token); if(!u) return {ok:false,error:'Please sign in again.'};
+      if(p.name) u.name=p.name; if(p.phone) u.phone=p.phone;
+      set('sm_users', get('sm_users').map(function(x){return x.email===u.email?u:x;})); return {ok:true,user:pub(u)}; },
+    requestPasswordReset:function(p){ var u=findUser(p.email); if(!u) return {ok:true,message:'If that email has an account, a reset code has been sent.'};
+      u.reset=String(Math.floor(100000+Math.random()*900000)); set('sm_users', get('sm_users').map(function(x){return x.email===u.email?u:x;}));
+      return {ok:true,message:'Preview mode — your reset code is '+u.reset}; },
+    resetPasswordWithCode:function(p){ var u=findUser(p.email); if(!u) return {ok:false,error:'No account found.'};
+      if(String(u.reset||'')!==String(p.code)) return {ok:false,error:'That reset code is not correct.'};
+      u.pass=btoa(p.newPassword); u.reset=''; set('sm_users', get('sm_users').map(function(x){return x.email===u.email?u:x;})); return {ok:true}; },
+    adminListUsers:function(p){ var a=userByToken(p.token); if(!a||a.role!=='admin') return {ok:false,error:'Admin only.'};
+      return {ok:true,users:get('sm_users').map(function(u){return {email:u.email,name:u.name,phone:u.phone,role:u.role};})}; },
+    adminSetPassword:function(p){ var a=userByToken(p.token); if(!a||a.role!=='admin') return {ok:false,error:'Admin only.'};
+      var u=findUser(p.email); if(!u) return {ok:false,error:'No account with that email.'}; u.pass=btoa(p.newPassword); u.token='';
+      set('sm_users', get('sm_users').map(function(x){return x.email===u.email?u:x;})); return {ok:true,message:'Password reset for '+p.email+'.'}; },
+    adminForceLogout:function(p){ var a=userByToken(p.token); if(!a||a.role!=='admin') return {ok:false,error:'Admin only.'};
+      var u=findUser(p.email); if(!u) return {ok:false,error:'No account.'}; u.token='';
+      set('sm_users', get('sm_users').map(function(x){return x.email===u.email?u:x;})); return {ok:true,message:'Signed out '+p.email+'.'}; },
+    submitReview:function(p){ var revs=get('sm_reviews'); var u=userByToken(p.token);
+      revs.push({id:'REV-'+Date.now(),name:p.name,email:(u&&u.email)||'',stars:p.stars,text:p.text,status:'pending',date:new Date().toISOString().slice(0,10)});
+      set('sm_reviews',revs); return {ok:true}; },
+    getApprovedReviews:function(){ return {ok:true,reviews:get('sm_reviews').filter(function(r){return r.status==='approved';}).reverse()}; },
+    getPendingReviews:function(p){ var a=userByToken(p.token); if(!a||a.role!=='admin') return {ok:false,error:'Admin only.',reviews:[]};
+      return {ok:true,reviews:get('sm_reviews').filter(function(r){return r.status==='pending';}).reverse()}; },
+    moderateReview:function(p){ var a=userByToken(p.token); if(!a||a.role!=='admin') return {ok:false,error:'Admin only.'};
+      set('sm_reviews', get('sm_reviews').map(function(r){ if(r.id===p.id) r.status=(p.action==='approve')?'approved':'rejected'; return r; })); return {ok:true}; },
+    submitContact:function(p){ return {ok:true}; },
+    getGlobalMinDate:function(){ return fmtISO(addDays(todayLocal(), CONFIG.BLOCK_BEFORE_DAYS)); },
+    getBlockedDates:function(){ var b=[]; get('sm_orders').forEach(function(o){ var d=parseISO(o.date); for(var i=1;i<=CONFIG.BLOCK_AFTER_ORDER_DAYS;i++) b.push(fmtISO(addDays(d,i))); }); return b; },
+    checkDateAvailability:function(p){ var date=p.date||p; var min=addDays(todayLocal(),CONFIG.BLOCK_BEFORE_DAYS);
+      if(parseISO(date)<min) return {available:false,message:'The earliest available date is '+fmtISO(min)+'.'};
+      var n=0; var orders=get('sm_orders');
+      for(var i=0;i<orders.length;i++){ if(orders[i].date===date) n++;
+        var d=parseISO(orders[i].date); for(var k=1;k<=CONFIG.BLOCK_AFTER_ORDER_DAYS;k++){ if(date===fmtISO(addDays(d,k))) return {available:false,message:'That date is unavailable (within '+CONFIG.BLOCK_AFTER_ORDER_DAYS+' days of another order).'}; } }
+      if(n>=CONFIG.MAX_ORDERS_PER_DAY) return {available:false,message:'That date is fully booked. Please choose another.'};
+      return {available:true}; },
+    saveOrder:function(o){ var chk=this.checkDateAvailability(o.date); if(!chk.available) return {ok:false,error:chk.message};
+      var u=userByToken(o.token); var orders=get('sm_orders');
+      orders.push({id:o.id,date:o.date,customer:o.customer,items:o.items,total:o.total,method:o.payment.method,writing:o.writing,
+        account:(u&&u.email)||o.customer.email,status:'received',placed:new Date().toISOString().slice(0,10)});
+      set('sm_orders',orders); return {ok:true,orderId:o.id,pickupAddress:CONFIG.PICKUP_ADDRESS}; },
+    getOrderHistory:function(p){ var u=userByToken(p.token); if(!u) return {ok:false,error:'Please sign in.',orders:[]};
+      var me=u.email.toLowerCase();
+      return {ok:true,orders:get('sm_orders').filter(function(o){ return String(o.account||'').toLowerCase()===me || String(o.customer&&o.customer.email||'').toLowerCase()===me; })
+        .map(function(o){ return {id:o.id,date:o.date,total:o.total,method:o.method,items:o.items,writing:o.writing,status:o.status,placed:o.placed}; }).reverse()}; }
+  };
+})();
+</script>
+</body>
+</html>
